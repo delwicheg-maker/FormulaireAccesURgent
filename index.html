@@ -1,3 +1,19 @@
+<!--
+    Résidence Schmidt — Formulaire Accès d'urgence
+    ==================================================
+    VERSION : 1.1.0
+
+    CHANGELOG :
+    v1.1.0 (2026-08-21)
+      - Correction du doublon complet du fichier (v1.0.0 était dupliqué)
+      - Ajout des id manquants sur les champs "contact de confiance"
+        (nom, téléphone, adresse) — non collectables auparavant
+      - Ajout collecte des données + envoi vers Google Sheet (Apps Script)
+      - Ajout validation des champs obligatoires avant soumission finale
+      - Ajout numéro de version visible en bas de page
+    v1.0.0 (2026-08-21) — Prototype initial fourni
+    ==================================================
+-->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -675,6 +691,7 @@
         </div>
 
     </div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.1.0-DEBUG</div>
 </div>
 
 <script>
@@ -684,7 +701,13 @@
     // ==========================================================
     const GOOGLE_SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbwpnIdd9u5UnTcyievn3HWU2falsbgpTBIEDs_MjcUZbjcHiFh3GKP0IU2zKpzw9Gk1/exec";
 
-    let currentLang = 'fr';
+    // --- DEBUG : affiche une alerte si erreur JS ---
+    window.onerror = function(message, source, lineno, colno, error) {
+        alert("Erreur JS :\n" + message + "\n(ligne " + lineno + ")");
+        return false;
+    };
+    // -------------------------------------------------
+    let currentLang = "fr";
 
     function hideAllScreens() {
         document.querySelectorAll('.view-screen').forEach(scr => scr.classList.remove('active'));
