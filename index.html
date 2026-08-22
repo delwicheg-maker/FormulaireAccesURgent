@@ -1,17 +1,34 @@
 <!--
     Résidence Schmidt — Formulaire Accès d'urgence
     ==================================================
-    VERSION : 1.1.0
+    Ce fichier fait partie du même système que Code.gs (numéro de
+    version synchronisé entre les deux fichiers).
 
-    CHANGELOG :
+    VERSION SYSTÈME : 1.2.0
+
+    CHANGELOG (système complet, HTML + Apps Script) :
+    v1.2.0 (2026-08-21)
+      - [index.html] Correctif tactile iOS/iPadOS : le tap sur les
+        boutons Suivant/Retour/Transmettre pouvait rater sa cible quand
+        un champ était encore actif au clavier (le bouton se déplaçait
+        pendant la fermeture du clavier). Le clavier se ferme désormais
+        dès le début du tap.
+      - [Code.gs] Passage de l'en-tête en commentaire bloc /* */ à des
+        commentaires ligne par ligne (//) : plus robuste au copier-coller
+        sur iPad, où la première ligne du bloc s'était perdue et avait
+        cassé tout le script (erreur de syntaxe "Unexpected identifier").
     v1.1.0 (2026-08-21)
-      - Correction du doublon complet du fichier (v1.0.0 était dupliqué)
-      - Ajout des id manquants sur les champs "contact de confiance"
-        (nom, téléphone, adresse) — non collectables auparavant
-      - Ajout collecte des données + envoi vers Google Sheet (Apps Script)
-      - Ajout validation des champs obligatoires avant soumission finale
-      - Ajout numéro de version visible en bas de page
-    v1.0.0 (2026-08-21) — Prototype initial fourni
+      - [index.html] Ajout de la collecte des données du formulaire et
+        de l'envoi vers Google Sheet (fetch vers l'endpoint Apps Script).
+        Ajout de la validation des champs obligatoires avant soumission.
+        Ajout des id manquants sur les champs "contact de confiance".
+      - [Code.gs] Version initiale du backend : réception des données
+        via doPost, création automatique de la feuille "Réponses",
+        ajout d'une ligne par soumission (FR/NL/EN), gestion des champs
+        conditionnels "contact de confiance".
+    v1.0.0 (2026-08-21)
+      - [index.html] Prototype HTML initial fourni (trilingue FR/NL/EN),
+        doublon complet du fichier corrigé.
     ==================================================
 -->
 <!DOCTYPE html>
@@ -691,7 +708,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.1.0-DEBUG</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.2.0</div>
 </div>
 
 <script>
@@ -701,13 +718,21 @@
     // ==========================================================
     const GOOGLE_SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbwpnIdd9u5UnTcyievn3HWU2falsbgpTBIEDs_MjcUZbjcHiFh3GKP0IU2zKpzw9Gk1/exec";
 
-    // --- DEBUG : affiche une alerte si erreur JS ---
-    window.onerror = function(message, source, lineno, colno, error) {
-        alert("Erreur JS :\n" + message + "\n(ligne " + lineno + ")");
-        return false;
-    };
-    // -------------------------------------------------
-    let currentLang = "fr";
+    let currentLang = 'fr';
+
+    // Correctif iOS/iPadOS : ferme le clavier virtuel dès le début du tap
+    // (touchstart) plutôt qu'à la fin, pour éviter que le repositionnement
+    // de l'écran pendant la fermeture du clavier ne fasse "rater" le tap
+    // sur les boutons Suivant/Retour/Transmettre.
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.btn-primary, .btn-secondary').forEach(function(btn) {
+            btn.addEventListener('touchstart', function() {
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+            }, { passive: true });
+        });
+    });
 
     function hideAllScreens() {
         document.querySelectorAll('.view-screen').forEach(scr => scr.classList.remove('active'));
