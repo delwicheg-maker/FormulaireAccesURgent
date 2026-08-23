@@ -4,9 +4,34 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 1.2.0
+    VERSION SYSTÈME : 1.3.1
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v1.3.1 (2026-08-22)
+      - [index.html] Remplacement de l'image du bandeau d'en-tête par la
+        nouvelle image fournie. Chargée via le service de vignettes
+        Google Drive (sz=w900) qui redimensionne et compresse l'image à
+        la volée pour réduire son poids, plutôt que de charger le
+        fichier original en pleine résolution.
+    v1.3.0 (2026-08-22)
+      - [index.html] Validation déplacée : chaque écran valide désormais
+        ses propres champs obligatoires au moment de cliquer sur "Suivant"
+        (au lieu de tout valider uniquement à l'écran 3). L'écran 2 valide
+        aussi les champs de la "Personne de confiance" si cette option est
+        choisie. Une revalidation complète a lieu par sécurité à la
+        soumission finale (au cas où l'utilisateur reviendrait en arrière
+        et effacerait un champ).
+      - [index.html] Écran 1 : ajout du sous-titre "Réagir au plus vite
+        pour minimiser les dégâts", précision du texte d'introduction
+        (types d'urgence visés), correction de l'aide "Appartement"
+        (identification en se plaçant en front de rue).
+      - [index.html] Écran 2 : mise en gras de la condition d'absence de
+        prise en charge assurance, correction "l'assurance" → "les
+        assurances", reformulation de l'option "contacté en priorité"
+        (risque de dégâts au-delà des 15 min, plus explicite).
+      - [index.html] Écran 3 : mention explicite du RGPD dans le texte de
+        consentement.
+      - [index.html] Traductions NL/EN alignées sur les mêmes changements.
     v1.2.0 (2026-08-21)
       - [index.html] Correctif tactile iOS/iPadOS : le tap sur les
         boutons Suivant/Retour/Transmettre pouvait rater sa cible quand
@@ -57,7 +82,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; padding: 24px 16px; min-height: 100vh; }
         .container { width: 100%; max-width: 680px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; }
-        .banner { width: 100%; height: 200px; background-image: url('https://drive.google.com/thumbnail?id=1-Lvu2Iq1rsaamams54U2mnWUtssWjfpL&sz=w1200'); background-size: cover; background-position: center; position: relative; }
+        .banner { width: 100%; height: 200px; background-image: url('https://drive.google.com/thumbnail?id=1Agnpq4mskVO1ncn9iz3ggDGs5D0dQfZp&sz=w900'); background-size: cover; background-position: center; position: relative; }
         .brand-header { display: flex; align-items: flex-end; gap: 12px; margin-top: -30px; margin-left: 24px; margin-bottom: 20px; position: relative; z-index: 3; }
         .icon-avatar { width: 64px; height: 64px; background: #ffffff; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; border: 3px solid #ffffff; overflow: hidden; flex-shrink: 0; }
         .icon-avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -174,12 +199,13 @@
             </div>
             
             <h1 class="title-green-large">Accès d'urgence</h1>
-            <p class="subtitle">L'objectif de ce formulaire est d'établir le moyen d'accéder à votre appartement le plus rapidement possible (moins de 15 minutes) et d'éviter que les services d'urgence ne défoncent votre porte.</p>
+            <p style="text-align:center; font-weight:700; color: var(--primary-green); margin-bottom: 8px; font-size: 1.05rem;">Réagir au plus vite pour minimiser les dégâts</p>
+            <p class="subtitle">L'objectif de ce formulaire est d'établir le moyen d'accéder à votre appartement le plus rapidement possible (moins de 15 minutes) en cas d'urgence (sinistre eau, feu, gaz) et d'éviter que les services d'urgence ne détruisent votre porte.</p>
 
             <div class="step-card">
                 <div class="section-title-green">1. Identification de l'occupant</div>
                 <p class="field-help">
-                    <strong>Appartement :</strong> L'identification gauche (G) ou droite (D) se fait en vous plaçant devant l'immeuble.<br><br>
+                    <strong>Appartement :</strong> l'identification de votre appartement se fait en vous plaçant en front de rue et en regardant l'immeuble : s'il est situé à gauche = (G), si à droite = (D).<br><br>
                     <strong>Téléphone principal :</strong> Le numéro où vous joindre directement en urgence.<br><br>
                     <strong>Adresse e-mail :</strong> Pour vous envoyer une copie des données transmises.
                 </p>
@@ -233,8 +259,10 @@
                 </div>
             </div>
 
+            <div id="error-fr-1" class="error-message"></div>
+
             <div class="nav-buttons">
-                <button type="button" class="btn-primary" onclick="goToNext('fr', 1, 2)">Suivant →</button>
+                <button type="button" class="btn-primary" onclick="validateAndGoToNext('fr', 1, 2)">Suivant →</button>
             </div>
         </div>
 
@@ -251,7 +279,7 @@
             <div class="info-badge-pink">
                 <svg class="svg-icon-large" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
-                    <strong>Information légale & Assurances :</strong> Conformément au droit belge (art. 15 Constitution), la remise d'un double de clés reste facultative. En cas d'urgence ou de sinistre, si vous êtes injoignable et qu'aucun accès n'est prévu, les dégâts causés par l'enfoncement de la porte ne seront pas pris en charge par l'assurance.
+                    <strong>Information légale & Assurances :</strong> Conformément au droit belge (art. 15 Constitution), la remise d'un double de clés reste facultative. En cas d'urgence ou de sinistre, <strong>si vous êtes injoignable et qu'aucun accès n'est prévu</strong>, les dégâts causés par l'enfoncement de la porte ne seront pas pris en charge par les assurances.
                 </div>
             </div>
 
@@ -275,7 +303,7 @@
                         </label>
                         <label class="option-label">
                             <input type="radio" name="key_option_fr" value="emergency_only" onclick="toggleKeyDetails('fr', 'none')">
-                            <span>Je souhaite être contacté en priorité (conscient des risques sous 15 min).</span>
+                            <span>Je souhaite être contacté en priorité (conscient des risques de dégâts au-delà des 15 min).</span>
                         </label>
                     </div>
                 </div>
@@ -303,9 +331,11 @@
                 <div id="key-given-fr" class="conditional-box"><p style="font-size:0.88rem;">Pli scellé répertorié dans le registre sécurisé.</p></div>
             </div>
 
+            <div id="error-fr-2" class="error-message"></div>
+
             <div class="nav-buttons">
                 <button type="button" class="btn-secondary" onclick="goToPrev('fr', 2, 1)">← Retour</button>
-                <button type="button" class="btn-primary" onclick="goToNext('fr', 2, 3)">Suivant →</button>
+                <button type="button" class="btn-primary" onclick="validateAndGoToNext('fr', 2, 3)">Suivant →</button>
             </div>
         </div>
 
@@ -324,12 +354,12 @@
                 <div class="checkbox-group">
                     <label class="option-label">
                         <input type="checkbox" id="fr-consent">
-                        <span>J'autorise le Conseil de Copropriété à utiliser ces données exclusivement pour la gestion des urgences.</span>
+                        <span>Conformément au RGPD (Règlement Général sur la Protection des Données), j'autorise le Conseil de Copropriété à utiliser ces données exclusivement pour la gestion des urgences.</span>
                     </label>
                 </div>
             </div>
 
-            <div id="error-fr" class="error-message"></div>
+            <div id="error-fr-3" class="error-message"></div>
 
             <div class="nav-buttons">
                 <button type="button" class="btn-secondary" onclick="goToPrev('fr', 3, 2)">← Retour</button>
@@ -355,12 +385,13 @@
             </div>
             
             <h1 class="title-green-large">Noodtoegang</h1>
-            <p class="subtitle">Het doel van dit formulier is om de snelst mogelijke toegang tot uw appartement vast te stellen (minder dan 15 minuten) en te voorkomen dat hulpdiensten uw deur forceren.</p>
+            <p style="text-align:center; font-weight:700; color: var(--primary-green); margin-bottom: 8px; font-size: 1.05rem;">Zo snel mogelijk reageren om de schade te beperken</p>
+            <p class="subtitle">Het doel van dit formulier is om de snelst mogelijke toegang tot uw appartement vast te stellen (minder dan 15 minuten) in geval van nood (waterschade, brand, gas) en te voorkomen dat hulpdiensten uw deur forceren.</p>
 
             <div class="step-card">
                 <div class="section-title-green">1. Identificatie van de bewoner</div>
                 <p class="field-help">
-                    <strong>Appartement:</strong> De identificatie links (G) of rechts (D) gebeurt door voor het gebouw te staan.<br><br>
+                    <strong>Appartement:</strong> de identificatie van uw appartement gebeurt door voor de straat te gaan staan en naar het gebouw te kijken: als het links ligt = (L), als het rechts ligt = (R).<br><br>
                     <strong>Primaire telefoon:</strong> Het nummer waarop u bij spoed rechtstreeks bereikbaar bent.<br><br>
                     <strong>E-mailadres:</strong> Om u een kopie van de verzonden gegevens te sturen.
                 </p>
@@ -414,8 +445,10 @@
                 </div>
             </div>
 
+            <div id="error-nl-1" class="error-message"></div>
+
             <div class="nav-buttons">
-                <button type="button" class="btn-primary" onclick="goToNext('nl', 1, 2)">Volgende →</button>
+                <button type="button" class="btn-primary" onclick="validateAndGoToNext('nl', 1, 2)">Volgende →</button>
             </div>
         </div>
 
@@ -432,7 +465,7 @@
             <div class="info-badge-pink">
                 <svg class="svg-icon-large" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
-                    <strong>Juridische informatie & Verzekeringen:</strong> Overeenkomstig het Belgisch recht (art. 15 Grondwet) is het afgeven van een reservesleutel optioneel. Bij nood of schade, indien u niet bereikbaar bent en er geen toegang is voorzien, wordt schade veroorzaakt door het forceren van de deur niet gedekt door de verzekering.
+                    <strong>Juridische informatie & Verzekeringen:</strong> Overeenkomstig het Belgisch recht (art. 15 Grondwet) is het afgeven van een reservesleutel optioneel. Bij nood of schade, <strong>indien u niet bereikbaar bent en er geen toegang is voorzien</strong>, wordt schade veroorzaakt door het forceren van de deur niet gedekt door de verzekeringen.
                 </div>
             </div>
 
@@ -456,7 +489,7 @@
                         </label>
                         <label class="option-label">
                             <input type="radio" name="key_option_nl" value="emergency_only" onclick="toggleKeyDetails('nl', 'none')">
-                            <span>Ik wil bij prioriteit gecontacteerd worden (bewust van de risico's binnen 15 min).</span>
+                            <span>Ik wil bij prioriteit gecontacteerd worden (bewust van het risico op schade na 15 min).</span>
                         </label>
                     </div>
                 </div>
@@ -484,9 +517,11 @@
                 <div id="key-given-nl" class="conditional-box"><p style="font-size:0.88rem;">Verzegelde enveloppe geregistreerd in het beveiligde register.</p></div>
             </div>
 
+            <div id="error-nl-2" class="error-message"></div>
+
             <div class="nav-buttons">
                 <button type="button" class="btn-secondary" onclick="goToPrev('nl', 2, 1)">← Terug</button>
-                <button type="button" class="btn-primary" onclick="goToNext('nl', 2, 3)">Volgende →</button>
+                <button type="button" class="btn-primary" onclick="validateAndGoToNext('nl', 2, 3)">Volgende →</button>
             </div>
         </div>
 
@@ -505,12 +540,12 @@
                 <div class="checkbox-group">
                     <label class="option-label">
                         <input type="checkbox" id="nl-consent">
-                        <span>Ik geef de Raad van Mede-eigendom toestemming om deze gegevens uitsluitend voor noodgevallen te gebruiken.</span>
+                        <span>Overeenkomstig de AVG (Algemene Verordening Gegevensbescherming) geef ik de Raad van Mede-eigendom toestemming om deze gegevens uitsluitend voor noodgevallen te gebruiken.</span>
                     </label>
                 </div>
             </div>
 
-            <div id="error-nl" class="error-message"></div>
+            <div id="error-nl-3" class="error-message"></div>
 
             <div class="nav-buttons">
                 <button type="button" class="btn-secondary" onclick="goToPrev('nl', 3, 2)">← Terug</button>
@@ -536,12 +571,13 @@
             </div>
             
             <h1 class="title-green-large">Emergency Access</h1>
-            <p class="subtitle">The purpose of this form is to establish the quickest way to access your apartment (under 15 minutes) and prevent emergency services from breaking down your door.</p>
+            <p style="text-align:center; font-weight:700; color: var(--primary-green); margin-bottom: 8px; font-size: 1.05rem;">Act fast to minimize the damage</p>
+            <p class="subtitle">The purpose of this form is to establish the quickest way to access your apartment (under 15 minutes) in case of emergency (water damage, fire, gas) and prevent emergency services from breaking down your door.</p>
 
             <div class="step-card">
                 <div class="section-title-green">1. Occupant Identification</div>
                 <p class="field-help">
-                    <strong>Apartment:</strong> Left (G) or Right (D) identification is made while facing the front of the building.<br><br>
+                    <strong>Apartment:</strong> to identify your apartment, stand facing the street and look at the building: if it is on the left = (L), if on the right = (R).<br><br>
                     <strong>Primary Phone:</strong> The direct number to reach you in case of an emergency.<br><br>
                     <strong>Email Address:</strong> To send you a copy of the submitted information.
                 </p>
@@ -595,8 +631,10 @@
                 </div>
             </div>
 
+            <div id="error-en-1" class="error-message"></div>
+
             <div class="nav-buttons">
-                <button type="button" class="btn-primary" onclick="goToNext('en', 1, 2)">Next →</button>
+                <button type="button" class="btn-primary" onclick="validateAndGoToNext('en', 1, 2)">Next →</button>
             </div>
         </div>
 
@@ -613,7 +651,7 @@
             <div class="info-badge-pink">
                 <svg class="svg-icon-large" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
-                    <strong>Legal Notice & Insurance:</strong> In accordance with Belgian law (art. 15 Constitution), providing a duplicate key is optional. In the event of an emergency or incident, if you cannot be reached and no access is provided, damage caused by forcing the door will not be covered by insurance.
+                    <strong>Legal Notice & Insurance:</strong> In accordance with Belgian law (art. 15 Constitution), providing a duplicate key is optional. In the event of an emergency or incident, <strong>if you cannot be reached and no access is provided</strong>, damage caused by forcing the door will not be covered by insurance.
                 </div>
             </div>
 
@@ -637,7 +675,7 @@
                         </label>
                         <label class="option-label">
                             <input type="radio" name="key_option_en" value="emergency_only" onclick="toggleKeyDetails('en', 'none')">
-                            <span>I wish to be contacted first (aware of the risks within 15 min).</span>
+                            <span>I wish to be contacted first (aware of the risk of damage beyond 15 min).</span>
                         </label>
                     </div>
                 </div>
@@ -665,9 +703,11 @@
                 <div id="key-given-en" class="conditional-box"><p style="font-size:0.88rem;">Sealed envelope recorded in the secure registry.</p></div>
             </div>
 
+            <div id="error-en-2" class="error-message"></div>
+
             <div class="nav-buttons">
                 <button type="button" class="btn-secondary" onclick="goToPrev('en', 2, 1)">← Back</button>
-                <button type="button" class="btn-primary" onclick="goToNext('en', 2, 3)">Next →</button>
+                <button type="button" class="btn-primary" onclick="validateAndGoToNext('en', 2, 3)">Next →</button>
             </div>
         </div>
 
@@ -686,12 +726,12 @@
                 <div class="checkbox-group">
                     <label class="option-label">
                         <input type="checkbox" id="en-consent">
-                        <span>I authorize the Co-ownership Council to use this data exclusively for emergency management.</span>
+                        <span>In accordance with the GDPR (General Data Protection Regulation), I authorize the Co-ownership Council to use this data exclusively for emergency management.</span>
                     </label>
                 </div>
             </div>
 
-            <div id="error-en" class="error-message"></div>
+            <div id="error-en-3" class="error-message"></div>
 
             <div class="nav-buttons">
                 <button type="button" class="btn-secondary" onclick="goToPrev('en', 3, 2)">← Back</button>
@@ -708,7 +748,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.2.0</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.3.1</div>
 </div>
 
 <script>
@@ -788,6 +828,77 @@
         return el ? el.value : '';
     }
 
+    // Libellés des champs manquants et préfixe du message d'erreur, par langue
+    const FIELD_LABELS = {
+        fr: { appartement: 'appartement', statut: 'statut', nom: 'nom', prenom: 'prénom', telephone: 'téléphone', email: 'email', option: "option d'accès", consent: 'consentement', contact_nom: 'nom du contact', contact_tel: 'téléphone du contact', contact_adresse: 'adresse du contact', contact_voisin: 'voisin (oui/non)' },
+        nl: { appartement: 'appartement', statut: 'status', nom: 'naam', prenom: 'voornaam', telephone: 'telefoon', email: 'email', option: 'toegangsoptie', consent: 'toestemming', contact_nom: 'naam van het contact', contact_tel: 'telefoon van het contact', contact_adresse: 'adres van het contact', contact_voisin: 'buur (ja/nee)' },
+        en: { appartement: 'apartment', statut: 'status', nom: 'last name', prenom: 'first name', telephone: 'phone', email: 'email', option: 'access option', consent: 'consent', contact_nom: 'contact name', contact_tel: 'contact phone', contact_adresse: 'contact address', contact_voisin: 'neighbor (yes/no)' }
+    };
+    const ERROR_PREFIX = { fr: 'Veuillez compléter : ', nl: 'Vul aub in: ', en: 'Please complete: ' };
+
+    function showError(lang, step, missingKeys) {
+        const errorBox = document.getElementById(`error-${lang}-${step}`);
+        if (!errorBox) return;
+        if (missingKeys.length === 0) {
+            errorBox.style.display = 'none';
+            errorBox.textContent = '';
+            return;
+        }
+        const labels = missingKeys.map(k => FIELD_LABELS[lang][k]);
+        errorBox.style.display = 'block';
+        errorBox.textContent = ERROR_PREFIX[lang] + labels.join(', ');
+    }
+
+    // Validation de l'écran 1 (identification de l'occupant)
+    function validateStep1(lang) {
+        const missing = [];
+        if (!getVal(`${lang}-apt`)) missing.push('appartement');
+        if (!getVal(`${lang}-statut`)) missing.push('statut');
+        if (!getVal(`${lang}-nom`)) missing.push('nom');
+        if (!getVal(`${lang}-prenom`)) missing.push('prenom');
+        if (!getVal(`${lang}-tel`)) missing.push('telephone');
+        if (!getVal(`${lang}-email`)) missing.push('email');
+        return missing;
+    }
+
+    // Validation de l'écran 2 (option d'accès + champs conditionnels)
+    function validateStep2(lang) {
+        const missing = [];
+        const keyOption = getChecked(`key_option_${lang}`);
+        if (!keyOption) {
+            missing.push('option');
+            return missing;
+        }
+        if (keyOption === 'contact_person') {
+            if (!getVal(`${lang}-contact-nom`)) missing.push('contact_nom');
+            if (!getVal(`${lang}-contact-tel`)) missing.push('contact_tel');
+            if (!getVal(`${lang}-contact-adresse`)) missing.push('contact_adresse');
+            if (!getChecked(`${lang}_voisin`)) missing.push('contact_voisin');
+        }
+        return missing;
+    }
+
+    // Validation de l'écran 3 (consentement)
+    function validateStep3(lang) {
+        const missing = [];
+        const consentEl = document.getElementById(`${lang}-consent`);
+        if (!consentEl || !consentEl.checked) missing.push('consent');
+        return missing;
+    }
+
+    // Valide l'écran courant avant de passer au suivant ; bloque et affiche
+    // le message d'erreur si des champs obligatoires manquent.
+    function validateAndGoToNext(lang, fromStep, toStep) {
+        let missing = [];
+        if (fromStep === 1) missing = validateStep1(lang);
+        else if (fromStep === 2) missing = validateStep2(lang);
+
+        showError(lang, fromStep, missing);
+
+        if (missing.length > 0) return;
+        goToNext(lang, fromStep, toStep);
+    }
+
     // Collecte toutes les données du formulaire pour la langue donnée
     function collectFormData(lang) {
         const keyOption = getChecked(`key_option_${lang}`);
@@ -818,37 +929,34 @@
         return data;
     }
 
-    function validateFormData(data) {
-        const missing = [];
-        if (!data.appartement) missing.push('appartement');
-        if (!data.statut_occupant) missing.push('statut');
-        if (!data.nom) missing.push('nom');
-        if (!data.prenom) missing.push('prénom');
-        if (!data.telephone) missing.push('téléphone');
-        if (!data.email) missing.push('email');
-        if (!data.option_cle) missing.push('option d\'accès');
-        if (!data.consentement) missing.push('consentement');
-        if (data.option_cle === 'contact_person') {
-            if (!data.contact_nom) missing.push('nom du contact');
-            if (!data.contact_telephone) missing.push('téléphone du contact');
-            if (!data.contact_adresse) missing.push('adresse du contact');
-            if (!data.contact_voisin) missing.push('voisin (oui/non)');
-        }
-        return missing;
-    }
-
     async function submitFinalForm(lang) {
-        const data = collectFormData(lang);
-        const errorBox = document.getElementById(`error-${lang}`);
-        const missing = validateFormData(data);
+        // Sécurité : on revalide tout (au cas où l'utilisateur serait revenu
+        // en arrière et aurait effacé un champ déjà validé plus tôt).
+        const missing1 = validateStep1(lang);
+        const missing2 = validateStep2(lang);
+        const missing3 = validateStep3(lang);
 
-        if (missing.length > 0) {
-            errorBox.style.display = 'block';
-            errorBox.textContent = 'Veuillez compléter : ' + missing.join(', ');
+        if (missing1.length > 0) {
+            hideAllScreens();
+            document.getElementById(`screen-${lang}-1`).classList.add('active');
+            showError(lang, 1, missing1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
-        errorBox.style.display = 'none';
+        if (missing2.length > 0) {
+            hideAllScreens();
+            document.getElementById(`screen-${lang}-2`).classList.add('active');
+            showError(lang, 2, missing2);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        if (missing3.length > 0) {
+            showError(lang, 3, missing3);
+            return;
+        }
+        showError(lang, 3, []);
 
+        const data = collectFormData(lang);
         const btn = document.getElementById(`submit-btn-${lang}`);
         const originalText = btn.textContent;
         btn.disabled = true;
@@ -872,6 +980,7 @@
             document.getElementById('success-msg').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err) {
+            const errorBox = document.getElementById(`error-${lang}-3`);
             errorBox.style.display = 'block';
             errorBox.textContent = "Erreur lors de l'envoi. Veuillez réessayer.";
             btn.disabled = false;
