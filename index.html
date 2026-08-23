@@ -4,9 +4,23 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 1.3.6
+    VERSION SYSTÈME : 1.4.0
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v1.4.0 (2026-08-22)
+      - [index.html] Écran 2 : la boîte "Information légale & Assurances"
+        passe du rose/rouge (trop proche visuellement des messages
+        d'erreur) au vert clair, avec le titre sur sa propre ligne suivi
+        du paragraphe. Traductions NL/EN alignées.
+      - [index.html] Écran 3 : le bouton de soumission est désormais grisé
+        (désactivé) tant que la case de consentement n'est pas cochée, et
+        un message rouge explicite apparaît automatiquement en dessous
+        ("Veuillez cocher la case ci-dessus..."). Traductions NL/EN.
+      - [index.html] Validation de format ajoutée pour l'email et les
+        numéros de téléphone (occupant + personne de confiance) : un
+        champ rempli mais mal formé (ex. "abc" en email) est désormais
+        rejeté avec un message dédié, en plus de la vérification "champ
+        vide" déjà en place.
     v1.3.6 (2026-08-22)
       - [index.html] Mise à jour du bandeau avec la nouvelle image aux
         dimensions 680x260 px (nouvel ID de fichier Drive). Toujours
@@ -102,6 +116,9 @@
             --pink-bg: #fff1f2;
             --pink-border: #fecdd3;
             --pink-text: #9f1239;
+            --info-bg: #f0fdf4;
+            --info-border: #bbf7d0;
+            --info-text: #166534;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
@@ -133,6 +150,7 @@
         .step-card { background: #ffffff; border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
         .svg-icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; }
         .svg-icon-large { width: 44px; height: 44px; min-width: 44px; fill: none; stroke: var(--pink-text); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .svg-icon-large-green { width: 44px; height: 44px; min-width: 44px; fill: none; stroke: var(--info-text); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
         .lang-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
         .lang-btn { background: #f8fafc; border: 2px solid var(--border-color); border-radius: 8px; padding: 16px 12px; font-size: 1rem; font-weight: 700; color: var(--text-main); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; }
@@ -160,6 +178,8 @@
         .conditional-box { display: none; margin-top: 16px; padding: 16px; background: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0; }
         .conditional-box.active { display: block; }
         .info-badge-pink { background: var(--pink-bg); border: 1px solid var(--pink-border); color: var(--pink-text); padding: 16px; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; display: flex; gap: 16px; align-items: center; }
+        .info-badge-green { background: var(--info-bg); border: 1px solid var(--info-border); color: var(--info-text); padding: 16px; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; display: flex; gap: 16px; align-items: center; }
+        .info-badge-green strong { display: block; margin-bottom: 4px; }
 
         .nav-buttons { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
         .btn-primary { flex: 1; background: var(--primary-green); color: white; border: none; padding: 14px 20px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; text-align: center; }
@@ -301,10 +321,11 @@
 
             <h1 class="title-green-large">Accès d'urgence</h1>
 
-            <div class="info-badge-pink">
-                <svg class="svg-icon-large" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div class="info-badge-green">
+                <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
-                    <strong>Information légale & Assurances :</strong> Conformément au droit belge (art. 15 Constitution), la remise d'un double de clés reste facultative. En cas d'urgence ou de sinistre, <strong>si vous êtes injoignable et qu'aucun accès n'est prévu</strong>, les dégâts causés par l'enfoncement de la porte ne seront pas pris en charge par les assurances.
+                    <strong>Information légale & Assurances</strong>
+                    Conformément au droit belge (art. 15 Constitution), la remise d'un double de clés reste facultative. En cas d'urgence ou de sinistre, <strong style="display:inline;">si vous êtes injoignable et qu'aucun accès n'est prévu</strong>, les dégâts causés par l'enfoncement de la porte ne seront pas pris en charge par les assurances.
                 </div>
             </div>
 
@@ -388,7 +409,7 @@
 
             <div class="nav-buttons">
                 <button type="button" class="btn-secondary" onclick="goToPrev('fr', 3, 2)">← Retour</button>
-                <button type="button" id="submit-btn-fr" class="btn-primary" onclick="submitFinalForm('fr')">Transmettre la fiche d'accès</button>
+                <button type="button" id="submit-btn-fr" class="btn-primary" onclick="submitFinalForm('fr')" disabled>Transmettre la fiche d'accès</button>
             </div>
         </div>
 
@@ -487,10 +508,11 @@
 
             <h1 class="title-green-large">Noodtoegang</h1>
 
-            <div class="info-badge-pink">
-                <svg class="svg-icon-large" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div class="info-badge-green">
+                <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
-                    <strong>Juridische informatie & Verzekeringen:</strong> Overeenkomstig het Belgisch recht (art. 15 Grondwet) is het afgeven van een reservesleutel optioneel. Bij nood of schade, <strong>indien u niet bereikbaar bent en er geen toegang is voorzien</strong>, wordt schade veroorzaakt door het forceren van de deur niet gedekt door de verzekeringen.
+                    <strong>Juridische informatie & Verzekeringen</strong>
+                    Overeenkomstig het Belgisch recht (art. 15 Grondwet) is het afgeven van een reservesleutel optioneel. Bij nood of schade, <strong style="display:inline;">indien u niet bereikbaar bent en er geen toegang is voorzien</strong>, wordt schade veroorzaakt door het forceren van de deur niet gedekt door de verzekeringen.
                 </div>
             </div>
 
@@ -574,7 +596,7 @@
 
             <div class="nav-buttons">
                 <button type="button" class="btn-secondary" onclick="goToPrev('nl', 3, 2)">← Terug</button>
-                <button type="button" id="submit-btn-nl" class="btn-primary" onclick="submitFinalForm('nl')">Toegangsfiche versturen</button>
+                <button type="button" id="submit-btn-nl" class="btn-primary" onclick="submitFinalForm('nl')" disabled>Toegangsfiche versturen</button>
             </div>
         </div>
 
@@ -673,10 +695,11 @@
 
             <h1 class="title-green-large">Emergency Access</h1>
 
-            <div class="info-badge-pink">
-                <svg class="svg-icon-large" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div class="info-badge-green">
+                <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
-                    <strong>Legal Notice & Insurance:</strong> In accordance with Belgian law (art. 15 Constitution), providing a duplicate key is optional. In the event of an emergency or incident, <strong>if you cannot be reached and no access is provided</strong>, damage caused by forcing the door will not be covered by insurance.
+                    <strong>Legal Notice & Insurance</strong>
+                    In accordance with Belgian law (art. 15 Constitution), providing a duplicate key is optional. In the event of an emergency or incident, <strong style="display:inline;">if you cannot be reached and no access is provided</strong>, damage caused by forcing the door will not be covered by insurance.
                 </div>
             </div>
 
@@ -760,7 +783,7 @@
 
             <div class="nav-buttons">
                 <button type="button" class="btn-secondary" onclick="goToPrev('en', 3, 2)">← Back</button>
-                <button type="button" id="submit-btn-en" class="btn-primary" onclick="submitFinalForm('en')">Submit access form</button>
+                <button type="button" id="submit-btn-en" class="btn-primary" onclick="submitFinalForm('en')" disabled>Submit access form</button>
             </div>
         </div>
 
@@ -773,7 +796,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.3.6</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.4.0</div>
 </div>
 
 <script>
@@ -796,6 +819,16 @@
                     document.activeElement.blur();
                 }
             }, { passive: true });
+        });
+
+        // Écran 3 : bouton grisé + message tant que le consentement
+        // n'est pas coché, pour chacune des 3 langues.
+        ['fr', 'nl', 'en'].forEach(function(lang) {
+            const consentEl = document.getElementById(`${lang}-consent`);
+            if (consentEl) {
+                consentEl.addEventListener('change', function() { updateConsentState(lang); });
+                updateConsentState(lang);
+            }
         });
     });
 
@@ -855,11 +888,17 @@
 
     // Libellés des champs manquants et préfixe du message d'erreur, par langue
     const FIELD_LABELS = {
-        fr: { appartement: 'appartement', statut: 'statut', nom: 'nom', prenom: 'prénom', telephone: 'téléphone', email: 'email', option: "option d'accès", consent: 'consentement', contact_nom: 'nom du contact', contact_tel: 'téléphone du contact', contact_adresse: 'adresse du contact', contact_voisin: 'voisin (oui/non)' },
-        nl: { appartement: 'appartement', statut: 'status', nom: 'naam', prenom: 'voornaam', telephone: 'telefoon', email: 'email', option: 'toegangsoptie', consent: 'toestemming', contact_nom: 'naam van het contact', contact_tel: 'telefoon van het contact', contact_adresse: 'adres van het contact', contact_voisin: 'buur (ja/nee)' },
-        en: { appartement: 'apartment', statut: 'status', nom: 'last name', prenom: 'first name', telephone: 'phone', email: 'email', option: 'access option', consent: 'consent', contact_nom: 'contact name', contact_tel: 'contact phone', contact_adresse: 'contact address', contact_voisin: 'neighbor (yes/no)' }
+        fr: { appartement: 'appartement', statut: 'statut', nom: 'nom', prenom: 'prénom', telephone: 'téléphone', email: 'email', option: "option d'accès", consent: 'consentement', contact_nom: 'nom du contact', contact_tel: 'téléphone du contact', contact_adresse: 'adresse du contact', contact_voisin: 'voisin (oui/non)', email_invalide: "email invalide (ex: nom@exemple.be)", telephone_invalide: 'téléphone invalide (ex: +32 4XX XX XX XX)', contact_tel_invalide: 'téléphone du contact invalide' },
+        nl: { appartement: 'appartement', statut: 'status', nom: 'naam', prenom: 'voornaam', telephone: 'telefoon', email: 'email', option: 'toegangsoptie', consent: 'toestemming', contact_nom: 'naam van het contact', contact_tel: 'telefoon van het contact', contact_adresse: 'adres van het contact', contact_voisin: 'buur (ja/nee)', email_invalide: 'ongeldige email (bv: naam@voorbeeld.be)', telephone_invalide: 'ongeldige telefoon (bv: +32 4XX XX XX XX)', contact_tel_invalide: 'ongeldige telefoon van het contact' },
+        en: { appartement: 'apartment', statut: 'status', nom: 'last name', prenom: 'first name', telephone: 'phone', email: 'email', option: 'access option', consent: 'consent', contact_nom: 'contact name', contact_tel: 'contact phone', contact_adresse: 'contact address', contact_voisin: 'neighbor (yes/no)', email_invalide: 'invalid email (e.g. name@example.com)', telephone_invalide: 'invalid phone (e.g. +32 4XX XX XX XX)', contact_tel_invalide: 'invalid contact phone' }
     };
     const ERROR_PREFIX = { fr: 'Veuillez compléter : ', nl: 'Vul aub in: ', en: 'Please complete: ' };
+
+    // Formats acceptés : email standard, téléphone avec au moins 8 chiffres
+    // (accepte +, espaces, points, tirets — reste permissif pour ne pas
+    // bloquer des formats internationaux légitimes).
+    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const PHONE_REGEX = /^\+?[0-9][0-9\s\-.]{6,17}$/;
 
     function showError(lang, step, missingKeys) {
         const errorBox = document.getElementById(`error-${lang}-${step}`);
@@ -881,8 +920,15 @@
         if (!getVal(`${lang}-statut`)) missing.push('statut');
         if (!getVal(`${lang}-nom`)) missing.push('nom');
         if (!getVal(`${lang}-prenom`)) missing.push('prenom');
-        if (!getVal(`${lang}-tel`)) missing.push('telephone');
-        if (!getVal(`${lang}-email`)) missing.push('email');
+
+        const tel = getVal(`${lang}-tel`);
+        if (!tel) missing.push('telephone');
+        else if (!PHONE_REGEX.test(tel)) missing.push('telephone_invalide');
+
+        const email = getVal(`${lang}-email`);
+        if (!email) missing.push('email');
+        else if (!EMAIL_REGEX.test(email)) missing.push('email_invalide');
+
         return missing;
     }
 
@@ -896,7 +942,11 @@
         }
         if (keyOption === 'contact_person') {
             if (!getVal(`${lang}-contact-nom`)) missing.push('contact_nom');
-            if (!getVal(`${lang}-contact-tel`)) missing.push('contact_tel');
+
+            const contactTel = getVal(`${lang}-contact-tel`);
+            if (!contactTel) missing.push('contact_tel');
+            else if (!PHONE_REGEX.test(contactTel)) missing.push('contact_tel_invalide');
+
             if (!getVal(`${lang}-contact-adresse`)) missing.push('contact_adresse');
             if (!getChecked(`${lang}_voisin`)) missing.push('contact_voisin');
         }
@@ -909,6 +959,32 @@
         const consentEl = document.getElementById(`${lang}-consent`);
         if (!consentEl || !consentEl.checked) missing.push('consent');
         return missing;
+    }
+
+    // Messages affichés quand la case de consentement n'est pas cochée
+    const CONSENT_MESSAGE = {
+        fr: "Veuillez cocher la case ci-dessus. Sans votre consentement, nous n'enregistrons pas vos données.",
+        nl: "Vink het bovenstaande vakje aan. Zonder uw toestemming registreren wij uw gegevens niet.",
+        en: "Please tick the box above. Without your consent, we do not save your data."
+    };
+
+    // Active/désactive le bouton "Transmettre" et affiche le message
+    // d'explication selon l'état de la case de consentement.
+    function updateConsentState(lang) {
+        const consentEl = document.getElementById(`${lang}-consent`);
+        const btn = document.getElementById(`submit-btn-${lang}`);
+        const errorBox = document.getElementById(`error-${lang}-3`);
+        if (!consentEl || !btn || !errorBox) return;
+
+        if (consentEl.checked) {
+            btn.disabled = false;
+            errorBox.style.display = 'none';
+            errorBox.textContent = '';
+        } else {
+            btn.disabled = true;
+            errorBox.style.display = 'block';
+            errorBox.textContent = CONSENT_MESSAGE[lang];
+        }
     }
 
     // Valide l'écran courant avant de passer au suivant ; bloque et affiche
