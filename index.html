@@ -4,9 +4,34 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 1.3.1
+    VERSION SYSTÈME : 1.3.6
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v1.3.6 (2026-08-22)
+      - [index.html] Mise à jour du bandeau avec la nouvelle image aux
+        dimensions 680x260 px (nouvel ID de fichier Drive). Toujours
+        chargée via le service de vignettes Google Drive (sz=w900) pour
+        limiter le poids.
+    v1.3.5 (2026-08-22)
+      - [index.html] Hauteur du bandeau passée à 260px (format cible
+        confirmé : 680x260 px pour les futures images d'en-tête).
+    v1.3.4 (2026-08-22)
+      - [index.html] Retour à une hauteur de bandeau fixe (200px) :
+        l'utilisateur prépare une nouvelle image aux dimensions exactes
+        680x200 px de son côté, ce qui évite tout recadrage sans avoir
+        besoin d'aspect-ratio en CSS.
+    v1.3.3 (2026-08-22)
+      - [index.html] Correction du bandeau d'en-tête : hauteur fixe
+        (200px puis 260px, valeurs arbitraires) remplacée par
+        aspect-ratio: 2048/512, calculé sur les dimensions réelles de
+        l'image fournie (2048x512 px, ratio 4:1). L'image s'affiche
+        désormais en entier, sans recadrage haut/bas ni sur les côtés.
+        Pour référence, l'ancienne image faisait 900x450 px (ratio 2:1),
+        ce qui explique pourquoi une hauteur fixe convenait à l'une mais
+        pas à l'autre.
+    v1.3.2 (2026-08-22)
+      - [index.html] Augmentation de la hauteur du bandeau d'en-tête
+        (200px → 260px) pour réduire le recadrage de l'image.
     v1.3.1 (2026-08-22)
       - [index.html] Remplacement de l'image du bandeau d'en-tête par la
         nouvelle image fournie. Chargée via le service de vignettes
@@ -82,7 +107,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; padding: 24px 16px; min-height: 100vh; }
         .container { width: 100%; max-width: 680px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; }
-        .banner { width: 100%; height: 200px; background-image: url('https://drive.google.com/thumbnail?id=1Agnpq4mskVO1ncn9iz3ggDGs5D0dQfZp&sz=w900'); background-size: cover; background-position: center; position: relative; }
+        .banner { width: 100%; height: 260px; background-image: url('https://drive.google.com/thumbnail?id=1aAhQb880N8CVTKg6MJX57ZLdxiArkXDy&sz=w900'); background-size: cover; background-position: center; position: relative; }
         .brand-header { display: flex; align-items: flex-end; gap: 12px; margin-top: -30px; margin-left: 24px; margin-bottom: 20px; position: relative; z-index: 3; }
         .icon-avatar { width: 64px; height: 64px; background: #ffffff; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; border: 3px solid #ffffff; overflow: hidden; flex-shrink: 0; }
         .icon-avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -748,7 +773,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.3.1</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.3.6</div>
 </div>
 
 <script>
