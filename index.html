@@ -4,9 +4,17 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 1.8.0
+    VERSION SYSTÈME : 1.9.0
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v1.9.0 (2026-08-24)
+      - [index.html] Ajout d'un écran récapitulatif (données des écrans 1
+        et 2) affiché automatiquement à l'arrivée sur l'écran 3, avant la
+        case de consentement, pour réduire les erreurs de saisie non
+        détectées (FR/NL/EN).
+      - [Code.gs] Nouvelle feuille "Dernière par appartement", mise à jour
+        automatiquement à chaque soumission : une seule ligne par
+        appartement, toujours la plus récente.
     v1.8.0 (2026-08-24) - SÉCURITÉ
       - [index.html] Ajout d'un champ obligatoire "Code d'accès" à
         l'écran 1 (FR/NL/EN). Vérifié uniquement côté serveur (jamais
@@ -475,6 +483,11 @@
             <h1 class="title-green-large">Accès d'urgence</h1>
 
             <div class="step-card">
+                <div class="section-title-green">Récapitulatif de vos informations</div>
+                <div id="recap-fr" style="font-size: 0.92rem; line-height: 1.9; color: var(--text-main);"></div>
+            </div>
+
+            <div class="step-card">
                 <div class="section-title-green">3. Confirmation & Consentement</div>
                 <div class="checkbox-group">
                     <label class="option-label">
@@ -666,6 +679,11 @@
             </div>
 
             <h1 class="title-green-large">Noodtoegang</h1>
+
+            <div class="step-card">
+                <div class="section-title-green">Overzicht van uw gegevens</div>
+                <div id="recap-nl" style="font-size: 0.92rem; line-height: 1.9; color: var(--text-main);"></div>
+            </div>
 
             <div class="step-card">
                 <div class="section-title-green">3. Bevestiging & Toestemming</div>
@@ -861,6 +879,11 @@
             <h1 class="title-green-large">Emergency Access</h1>
 
             <div class="step-card">
+                <div class="section-title-green">Summary of your information</div>
+                <div id="recap-en" style="font-size: 0.92rem; line-height: 1.9; color: var(--text-main);"></div>
+            </div>
+
+            <div class="step-card">
                 <div class="section-title-green">3. Confirmation & Consent</div>
                 <div class="checkbox-group">
                     <label class="option-label">
@@ -885,7 +908,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.8.0</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.9.0</div>
 </div>
 
 <script>
@@ -1103,7 +1126,53 @@
         showError(lang, fromStep, missing);
 
         if (missing.length > 0) return;
+        if (toStep === 3) populateRecap(lang);
         goToNext(lang, fromStep, toStep);
+    }
+
+    // Libellés du récapitulatif, par langue
+    const RECAP_LABELS = {
+        fr: { appartement: 'Appartement', statut: 'Statut', nom: 'Nom', prenom: 'Prénom', telephone: 'Téléphone', email: 'Email', option: "Option d'accès choisie", contactTitle: 'Personne de confiance', contact_nom: 'Nom', contact_tel: 'Téléphone', contact_adresse: 'Adresse', contact_voisin: 'Voisin dans l\'immeuble', oui: 'Oui', non: 'Non' },
+        nl: { appartement: 'Appartement', statut: 'Status', nom: 'Naam', prenom: 'Voornaam', telephone: 'Telefoon', email: 'Email', option: 'Gekozen toegangsoptie', contactTitle: 'Vertrouwenspersoon', contact_nom: 'Naam', contact_tel: 'Telefoon', contact_adresse: 'Adres', contact_voisin: 'Buur in het gebouw', oui: 'Ja', non: 'Nee' },
+        en: { appartement: 'Apartment', statut: 'Status', nom: 'Last name', prenom: 'First name', telephone: 'Phone', email: 'Email', option: 'Chosen access option', contactTitle: 'Trusted Contact', contact_nom: 'Name', contact_tel: 'Phone', contact_adresse: 'Address', contact_voisin: 'Neighbor in the building', oui: 'Yes', non: 'No' }
+    };
+
+    // Construit le récapitulatif affiché à l'écran 3, à partir des
+    // champs déjà remplis aux écrans 1 et 2 (lecture directe du DOM,
+    // pas de duplication de texte à maintenir : l'intitulé de l'option
+    // d'accès choisie est repris tel quel depuis son libellé affiché).
+    function populateRecap(lang) {
+        const L = RECAP_LABELS[lang];
+        const rows = [];
+        const addLine = (label, value) => rows.push(`<div><strong>${label} :</strong> ${value || '-'}</div>`);
+
+        addLine(L.appartement, getVal(`${lang}-apt`));
+        const statutSelect = document.getElementById(`${lang}-statut`);
+        addLine(L.statut, statutSelect && statutSelect.selectedIndex > 0 ? statutSelect.options[statutSelect.selectedIndex].text : '');
+        addLine(L.nom, getVal(`${lang}-nom`));
+        addLine(L.prenom, getVal(`${lang}-prenom`));
+        addLine(L.telephone, getVal(`${lang}-tel`));
+        addLine(L.email, getVal(`${lang}-email`));
+
+        const checkedRadio = document.querySelector(`input[name="key_option_${lang}"]:checked`);
+        let optionText = '';
+        if (checkedRadio) {
+            const span = checkedRadio.closest('.option-label').querySelector('span');
+            optionText = span ? span.textContent : '';
+        }
+        addLine(L.option, optionText);
+
+        if (checkedRadio && checkedRadio.value === 'contact_person') {
+            rows.push(`<div style="margin-top:6px; font-weight:700; color:var(--primary-green);">${L.contactTitle}</div>`);
+            addLine(L.contact_nom, getVal(`${lang}-contact-nom`));
+            addLine(L.contact_tel, getVal(`${lang}-contact-tel`));
+            addLine(L.contact_adresse, getVal(`${lang}-contact-adresse`));
+            const voisin = getChecked(`${lang}_voisin`);
+            addLine(L.contact_voisin, voisin === 'oui' ? L.oui : (voisin === 'non' ? L.non : ''));
+        }
+
+        const container = document.getElementById(`recap-${lang}`);
+        if (container) container.innerHTML = rows.join('');
     }
 
     // Collecte toutes les données du formulaire pour la langue donnée
