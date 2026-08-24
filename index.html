@@ -4,9 +4,23 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 1.5.0
+    VERSION SYSTÈME : 1.6.0
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v1.6.0 (2026-08-24)
+      - [index.html] En-tête : ajout d'une deuxième ligne "Conseil de
+        Copropriété" sous "Résidence Schmidt", bas du bloc texte aligné
+        avec le bas du logo, espace sous le bandeau légèrement réduit.
+      - [index.html] Écran de remerciement final : l'adresse email est
+        désormais sur sa propre ligne, centrée et en gras.
+      - [Code.gs] Email de confirmation : ajout d'une remarque en italique
+        expliquant que re-remplir le formulaire met à jour les données.
+      - [Code.gs] PDF récapitulatif repensé : police plus grande, libellés
+        en gras, titre centré en vert, sections séparées, meilleur
+        espacement.
+    v1.5.1 (2026-08-24) - [index.html] Aucun changement fonctionnel.
+      Ajout côté Code.gs uniquement (testPermissions(), voir Code.gs pour
+      le détail). Numéro synchronisé entre les deux fichiers.
     v1.5.0 (2026-08-24)
       - [index.html] Taille de police augmentée globalement (~+15%),
         ajustements mobile (paddings réduits sur petit écran).
@@ -139,10 +153,12 @@
         body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; padding: 24px 16px; min-height: 100vh; }
         .container { width: 100%; max-width: 680px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; }
         .banner { width: 100%; height: 260px; background-image: url('https://drive.google.com/thumbnail?id=1aAhQb880N8CVTKg6MJX57ZLdxiArkXDy&sz=w900'); background-size: cover; background-position: center; position: relative; }
-        .brand-header { display: flex; align-items: flex-end; gap: 12px; margin-top: -30px; margin-left: 24px; margin-bottom: 20px; position: relative; z-index: 3; }
+        .brand-header { display: flex; align-items: flex-end; gap: 12px; margin-top: -22px; margin-left: 24px; margin-bottom: 16px; position: relative; z-index: 3; }
         .icon-avatar { width: 64px; height: 64px; background: #ffffff; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; border: 3px solid #ffffff; overflow: hidden; flex-shrink: 0; }
         .icon-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .brand-name { font-size: 1.15rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.5px; line-height: 1.1; padding-bottom: 4px; }
+        .brand-text { display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 4px; }
+        .brand-name { font-size: 1.15rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.5px; line-height: 1.15; }
+        .brand-subtitle { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.3px; line-height: 1.15; }
         .form-content { padding: 10px 24px 36px 24px; }
 
         .stepper-container { position: relative; display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 320px; margin: 15px auto 25px auto; }
@@ -226,7 +242,10 @@
         <div class="icon-avatar">
             <img src="https://drive.google.com/thumbnail?id=1SAsT3wsbzx0FomR6tOdRnknefTLUAcY4&sz=w300" alt="Logo Résidence Schmidt">
         </div>
-        <div class="brand-name">RÉSIDENCE SCHMIDT</div>
+        <div class="brand-text">
+            <div class="brand-name">RÉSIDENCE SCHMIDT</div>
+            <div class="brand-subtitle">Conseil de Copropriété</div>
+        </div>
     </div>
 
     <div class="form-content">
@@ -814,7 +833,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.5.0</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.6.0</div>
 </div>
 
 <script>
@@ -1068,15 +1087,15 @@
     const SUCCESS_MESSAGES = {
         fr: {
             title: '✅ Merci d\'avoir rempli ce formulaire !',
-            text: (email) => `Vos informations d'accès d'urgence ont bien été enregistrées pour la Résidence Schmidt. Un mail reprenant ces données vous a été envoyé pour preuve de bonne réception, à l'adresse ${email}.<br><br>Si vous ne le voyez pas, vérifiez également votre boîte de courriers indésirables.`
+            text: (email) => `Vos informations d'accès d'urgence ont bien été enregistrées pour la Résidence Schmidt. Un mail reprenant ces données vous a été envoyé pour preuve de bonne réception, à l'adresse :<br><strong style="display:block; text-align:center; margin-top:6px;">${email}</strong><br>Si vous ne le voyez pas, vérifiez également votre boîte de courriers indésirables.`
         },
         nl: {
             title: '✅ Bedankt voor het invullen van dit formulier!',
-            text: (email) => `Uw noodtoegangsgegevens zijn geregistreerd voor Résidence Schmidt. Ter bevestiging is een e-mail met deze gegevens verzonden naar ${email}.<br><br>Als u deze niet ziet, controleer dan ook uw map met ongewenste e-mail.`
+            text: (email) => `Uw noodtoegangsgegevens zijn geregistreerd voor Résidence Schmidt. Ter bevestiging is een e-mail met deze gegevens verzonden naar:<br><strong style="display:block; text-align:center; margin-top:6px;">${email}</strong><br>Als u deze niet ziet, controleer dan ook uw map met ongewenste e-mail.`
         },
         en: {
             title: '✅ Thank you for completing this form!',
-            text: (email) => `Your emergency access information has been successfully saved for Résidence Schmidt. A confirmation email with this data has been sent to ${email}.<br><br>If you don't see it, please also check your spam/junk folder.`
+            text: (email) => `Your emergency access information has been successfully saved for Résidence Schmidt. A confirmation email with this data has been sent to:<br><strong style="display:block; text-align:center; margin-top:6px;">${email}</strong><br>If you don't see it, please also check your spam/junk folder.`
         }
     };
 
