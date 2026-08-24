@@ -4,9 +4,26 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 1.9.1
+    VERSION SYSTÈME : 2.0.0
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v2.0.0 (2026-08-24) - CHANGEMENT IMPORTANT
+      - [index.html] Codes internes des appartements unifiés entre les 3
+        langues (ex. "2-G" au lieu de valeurs différentes selon FR/NL/EN
+        pour le même appartement physique). L'affichage reste localisé
+        pour le résident, seule la valeur enregistrée change.
+      - [index.html] Ajout de "Conciergerie" dans la liste des
+        appartements (FR/NL/EN).
+      - [Code.gs] Traduction automatique des anciennes valeurs vers les
+        nouveaux codes pour que l'historique déjà enregistré reste pris
+        en compte.
+      - [Code.gs] Nouvelle feuille "Suivi des réponses" : qui a répondu /
+        qui manque encore, mise à jour à chaque soumission.
+      - [Code.gs] Nouvelle feuille "Destinataires" : notification email
+        courte au Conseil à chaque nouvelle soumission.
+    v1.9.2 (2026-08-24) - [index.html] Aucun changement fonctionnel.
+      Ajout côté Code.gs uniquement (backfillLatestByApartment(), voir
+      Code.gs pour le détail). Numéro synchronisé entre les deux fichiers.
     v1.9.1 (2026-08-24) - [index.html] Aucun changement Code.gs.
       Écran 3, bloc récapitulatif : ajout d'une phrase explicative sous
       le titre invitant à utiliser le bouton "Retour" pour corriger avant
@@ -351,15 +368,16 @@
                         <label>Appartement <span class="required">*</span></label>
                         <select id="fr-apt">
                             <option value="">-- Sélectionner --</option>
-                            <option value="Rez G">Rez G</option><option value="Rez D">Rez D</option>
-                            <option value="1 G">1 G</option><option value="1 D">1 D</option>
-                            <option value="2 G">2 G</option><option value="2 D">2 D</option>
-                            <option value="3 G">3 G</option><option value="3 D">3 D</option>
-                            <option value="4 G">4 G</option><option value="4 D">4 D</option>
-                            <option value="5 G">5 G</option><option value="5 D">5 D</option>
-                            <option value="6 G">6 G</option><option value="6 D">6 D</option>
-                            <option value="7 G">7 G</option><option value="7 D">7 D</option>
-                            <option value="8 G">8 G</option><option value="8 D">8 D</option>
+                            <option value="CONCIERGERIE">Conciergerie</option>
+                            <option value="REZ-G">Rez G</option><option value="REZ-D">Rez D</option>
+                            <option value="1-G">1 G</option><option value="1-D">1 D</option>
+                            <option value="2-G">2 G</option><option value="2-D">2 D</option>
+                            <option value="3-G">3 G</option><option value="3-D">3 D</option>
+                            <option value="4-G">4 G</option><option value="4-D">4 D</option>
+                            <option value="5-G">5 G</option><option value="5-D">5 D</option>
+                            <option value="6-G">6 G</option><option value="6-D">6 D</option>
+                            <option value="7-G">7 G</option><option value="7-D">7 D</option>
+                            <option value="8-G">8 G</option><option value="8-D">8 D</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -550,15 +568,16 @@
                         <label>Appartement <span class="required">*</span></label>
                         <select id="nl-apt">
                             <option value="">-- Selecteer --</option>
-                            <option value="Gelijkvloers L">Gelijkvloers L</option><option value="Gelijkvloers R">Gelijkvloers R</option>
-                            <option value="1 L">1 L</option><option value="1 R">1 R</option>
-                            <option value="2 L">2 L</option><option value="2 R">2 R</option>
-                            <option value="3 L">3 L</option><option value="3 R">3 R</option>
-                            <option value="4 L">4 L</option><option value="4 R">4 R</option>
-                            <option value="5 L">5 L</option><option value="5 R">5 R</option>
-                            <option value="6 L">6 L</option><option value="6 R">6 R</option>
-                            <option value="7 L">7 L</option><option value="7 R">7 R</option>
-                            <option value="8 L">8 L</option><option value="8 R">8 R</option>
+                            <option value="CONCIERGERIE">Conciërgewoning</option>
+                            <option value="REZ-G">Gelijkvloers L</option><option value="REZ-D">Gelijkvloers R</option>
+                            <option value="1-G">1 L</option><option value="1-D">1 R</option>
+                            <option value="2-G">2 L</option><option value="2-D">2 R</option>
+                            <option value="3-G">3 L</option><option value="3-D">3 R</option>
+                            <option value="4-G">4 L</option><option value="4-D">4 R</option>
+                            <option value="5-G">5 L</option><option value="5-D">5 R</option>
+                            <option value="6-G">6 L</option><option value="6-D">6 R</option>
+                            <option value="7-G">7 L</option><option value="7-D">7 R</option>
+                            <option value="8-G">8 L</option><option value="8-D">8 R</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -749,15 +768,16 @@
                         <label>Apartment <span class="required">*</span></label>
                         <select id="en-apt">
                             <option value="">-- Select --</option>
-                            <option value="Ground L">Ground L</option><option value="Ground R">Ground R</option>
-                            <option value="1 L">1 L</option><option value="1 R">1 R</option>
-                            <option value="2 L">2 L</option><option value="2 R">2 R</option>
-                            <option value="3 L">3 L</option><option value="3 R">3 R</option>
-                            <option value="4 L">4 L</option><option value="4 R">4 R</option>
-                            <option value="5 L">5 L</option><option value="5 R">5 R</option>
-                            <option value="6 L">6 L</option><option value="6 R">6 R</option>
-                            <option value="7 L">7 L</option><option value="7 R">7 R</option>
-                            <option value="8 L">8 L</option><option value="8 R">8 R</option>
+                            <option value="CONCIERGERIE">Concierge</option>
+                            <option value="REZ-G">Ground L</option><option value="REZ-D">Ground R</option>
+                            <option value="1-G">1 L</option><option value="1-D">1 R</option>
+                            <option value="2-G">2 L</option><option value="2-D">2 R</option>
+                            <option value="3-G">3 L</option><option value="3-D">3 R</option>
+                            <option value="4-G">4 L</option><option value="4-D">4 R</option>
+                            <option value="5-G">5 L</option><option value="5-D">5 R</option>
+                            <option value="6-G">6 L</option><option value="6-D">6 R</option>
+                            <option value="7-G">7 L</option><option value="7-D">7 R</option>
+                            <option value="8-G">8 L</option><option value="8-D">8 R</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -915,7 +935,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.9.1</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v2.0.0</div>
 </div>
 
 <script>
@@ -1153,7 +1173,8 @@
         const rows = [];
         const addLine = (label, value) => rows.push(`<div><strong>${label} :</strong> ${value || '-'}</div>`);
 
-        addLine(L.appartement, getVal(`${lang}-apt`));
+        const aptSelect = document.getElementById(`${lang}-apt`);
+        addLine(L.appartement, aptSelect && aptSelect.selectedIndex > 0 ? aptSelect.options[aptSelect.selectedIndex].text : '');
         const statutSelect = document.getElementById(`${lang}-statut`);
         addLine(L.statut, statutSelect && statutSelect.selectedIndex > 0 ? statutSelect.options[statutSelect.selectedIndex].text : '');
         addLine(L.nom, getVal(`${lang}-nom`));
