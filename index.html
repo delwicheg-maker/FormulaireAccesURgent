@@ -4,9 +4,27 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 1.7.0
+    VERSION SYSTÈME : 1.8.0
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v1.8.0 (2026-08-24) - SÉCURITÉ
+      - [index.html] Ajout d'un champ obligatoire "Code d'accès" à
+        l'écran 1 (FR/NL/EN). Vérifié uniquement côté serveur (jamais
+        présent dans le code source de la page).
+      - [index.html] Ajout d'un champ honeypot invisible (piège anti-bot).
+      - [index.html] Ajout d'une balise meta robots (noindex, nofollow)
+        pour empêcher l'indexation par les moteurs de recherche.
+      - [Code.gs] Vérification du code d'accès résident : toute
+        soumission sans le bon code est rejetée avant tout enregistrement
+        ou envoi d'email.
+      - [Code.gs] Vérification du honeypot et validation stricte des
+        champs/formats côté serveur (défense en profondeur contre un
+        appel direct à l'API, hors formulaire).
+      - Nouveau fichier robots.txt à uploader à la racine du repo GitHub.
+    v1.7.1 (2026-08-24) - [index.html] Aucun changement Code.gs.
+      Écran 1, aide "Adresse e-mail" : ajout d'une phrase invitant à
+      vérifier l'adresse saisie pour bien recevoir l'email de
+      confirmation (FR/NL/EN).
     v1.7.0 (2026-08-24)
       - [index.html] Écran 2, boîte "Personne de confiance" : mise en gras
         de "qu'elle puisse se déplacer rapidement" (et équivalents NL/EN).
@@ -136,6 +154,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accès d'urgence / Noodtoegang / Emergency Access</title>
+    <meta name="robots" content="noindex, nofollow">
     <style>
         :root {
             --primary-green: #15803d;
@@ -258,6 +277,13 @@
 
     <div class="form-content">
 
+        <!-- Piège anti-bot (honeypot) : invisible pour un humain, souvent
+             rempli automatiquement par les robots de spam. Si ce champ
+             contient une valeur à la soumission, la donnée est ignorée. -->
+        <div style="position:absolute; left:-9999px; top:-9999px;" aria-hidden="true">
+            <input type="text" id="hp-field" name="website" tabindex="-1" autocomplete="off">
+        </div>
+
         <!-- ÉCRAN ACCUEIL (Trilingue) -->
         <div id="screen-lang" class="view-screen active">
             <h1 class="title-green-large title-home-spaced">Accès d'urgence<br>Noodtoegang<br>Emergency Access</h1>
@@ -297,10 +323,16 @@
             <div class="step-card">
                 <div class="section-title-green">1. Identification de l'occupant</div>
                 <p class="field-help">
+                    <strong>Code d'accès :</strong> le code communiqué par le Conseil de Copropriété (via WhatsApp ou affichage), nécessaire pour valider votre soumission.<br><br>
                     <strong>Appartement :</strong> l'identification de votre appartement se fait en vous plaçant en front de rue et en regardant l'immeuble : s'il est situé à gauche = (G), si à droite = (D).<br><br>
                     <strong>Téléphone principal :</strong> Le numéro où vous joindre directement en urgence.<br><br>
-                    <strong>Adresse e-mail :</strong> Pour vous envoyer une copie des données transmises.
+                    <strong>Adresse e-mail :</strong> Pour vous envoyer une copie des données transmises. Vérifiez bien votre adresse mail afin de recevoir correctement votre mail de confirmation.
                 </p>
+
+                <div class="form-group">
+                    <label>Code d'accès <span class="required">*</span></label>
+                    <input type="text" id="fr-code" placeholder="Reçu via WhatsApp / affichage">
+                </div>
 
                 <div class="grid-2">
                     <div class="form-group">
@@ -484,10 +516,16 @@
             <div class="step-card">
                 <div class="section-title-green">1. Identificatie van de bewoner</div>
                 <p class="field-help">
+                    <strong>Toegangscode:</strong> de code meegedeeld door de Raad van Mede-eigendom (via WhatsApp of affiche), vereist om uw indiening te valideren.<br><br>
                     <strong>Appartement:</strong> de identificatie van uw appartement gebeurt door voor de straat te gaan staan en naar het gebouw te kijken: als het links ligt = (L), als het rechts ligt = (R).<br><br>
                     <strong>Primaire telefoon:</strong> Het nummer waarop u bij spoed rechtstreeks bereikbaar bent.<br><br>
-                    <strong>E-mailadres:</strong> Om u een kopie van de verzonden gegevens te sturen.
+                    <strong>E-mailadres:</strong> Om u een kopie van de verzonden gegevens te sturen. Controleer uw e-mailadres zorgvuldig om uw bevestigingsmail correct te ontvangen.
                 </p>
+
+                <div class="form-group">
+                    <label>Toegangscode <span class="required">*</span></label>
+                    <input type="text" id="nl-code" placeholder="Ontvangen via WhatsApp / affiche">
+                </div>
 
                 <div class="grid-2">
                     <div class="form-group">
@@ -671,10 +709,16 @@
             <div class="step-card">
                 <div class="section-title-green">1. Occupant Identification</div>
                 <p class="field-help">
+                    <strong>Access code:</strong> the code communicated by the Co-ownership Council (via WhatsApp or notice board), required to validate your submission.<br><br>
                     <strong>Apartment:</strong> to identify your apartment, stand facing the street and look at the building: if it is on the left = (L), if on the right = (R).<br><br>
                     <strong>Primary Phone:</strong> The direct number to reach you in case of an emergency.<br><br>
-                    <strong>Email Address:</strong> To send you a copy of the submitted information.
+                    <strong>Email Address:</strong> To send you a copy of the submitted information. Please double-check your email address to correctly receive your confirmation email.
                 </p>
+
+                <div class="form-group">
+                    <label>Access code <span class="required">*</span></label>
+                    <input type="text" id="en-code" placeholder="Received via WhatsApp / notice board">
+                </div>
 
                 <div class="grid-2">
                     <div class="form-group">
@@ -841,7 +885,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.7.0</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.8.0</div>
 </div>
 
 <script>
@@ -949,9 +993,9 @@
 
     // Libellés des champs manquants et préfixe du message d'erreur, par langue
     const FIELD_LABELS = {
-        fr: { appartement: 'appartement', statut: 'statut', nom: 'nom', prenom: 'prénom', telephone: 'téléphone', email: 'email', option: "option d'accès", consent: 'consentement', contact_nom: 'nom du contact', contact_tel: 'téléphone du contact', contact_adresse: 'adresse du contact', contact_voisin: 'voisin (oui/non)', email_invalide: "email invalide (ex: nom@exemple.be)", telephone_invalide: 'téléphone invalide (ex: +32 4XX XX XX XX)', contact_tel_invalide: 'téléphone du contact invalide' },
-        nl: { appartement: 'appartement', statut: 'status', nom: 'naam', prenom: 'voornaam', telephone: 'telefoon', email: 'email', option: 'toegangsoptie', consent: 'toestemming', contact_nom: 'naam van het contact', contact_tel: 'telefoon van het contact', contact_adresse: 'adres van het contact', contact_voisin: 'buur (ja/nee)', email_invalide: 'ongeldige email (bv: naam@voorbeeld.be)', telephone_invalide: 'ongeldige telefoon (bv: +32 4XX XX XX XX)', contact_tel_invalide: 'ongeldige telefoon van het contact' },
-        en: { appartement: 'apartment', statut: 'status', nom: 'last name', prenom: 'first name', telephone: 'phone', email: 'email', option: 'access option', consent: 'consent', contact_nom: 'contact name', contact_tel: 'contact phone', contact_adresse: 'contact address', contact_voisin: 'neighbor (yes/no)', email_invalide: 'invalid email (e.g. name@example.com)', telephone_invalide: 'invalid phone (e.g. +32 4XX XX XX XX)', contact_tel_invalide: 'invalid contact phone' }
+        fr: { code: "code d'accès", appartement: 'appartement', statut: 'statut', nom: 'nom', prenom: 'prénom', telephone: 'téléphone', email: 'email', option: "option d'accès", consent: 'consentement', contact_nom: 'nom du contact', contact_tel: 'téléphone du contact', contact_adresse: 'adresse du contact', contact_voisin: 'voisin (oui/non)', email_invalide: "email invalide (ex: nom@exemple.be)", telephone_invalide: 'téléphone invalide (ex: +32 4XX XX XX XX)', contact_tel_invalide: 'téléphone du contact invalide' },
+        nl: { code: 'toegangscode', appartement: 'appartement', statut: 'status', nom: 'naam', prenom: 'voornaam', telephone: 'telefoon', email: 'email', option: 'toegangsoptie', consent: 'toestemming', contact_nom: 'naam van het contact', contact_tel: 'telefoon van het contact', contact_adresse: 'adres van het contact', contact_voisin: 'buur (ja/nee)', email_invalide: 'ongeldige email (bv: naam@voorbeeld.be)', telephone_invalide: 'ongeldige telefoon (bv: +32 4XX XX XX XX)', contact_tel_invalide: 'ongeldige telefoon van het contact' },
+        en: { code: 'access code', appartement: 'apartment', statut: 'status', nom: 'last name', prenom: 'first name', telephone: 'phone', email: 'email', option: 'access option', consent: 'consent', contact_nom: 'contact name', contact_tel: 'contact phone', contact_adresse: 'contact address', contact_voisin: 'neighbor (yes/no)', email_invalide: 'invalid email (e.g. name@example.com)', telephone_invalide: 'invalid phone (e.g. +32 4XX XX XX XX)', contact_tel_invalide: 'invalid contact phone' }
     };
     const ERROR_PREFIX = { fr: 'Veuillez compléter : ', nl: 'Vul aub in: ', en: 'Please complete: ' };
 
@@ -977,6 +1021,7 @@
     // Validation de l'écran 1 (identification de l'occupant)
     function validateStep1(lang) {
         const missing = [];
+        if (!getVal(`${lang}-code`)) missing.push('code');
         if (!getVal(`${lang}-apt`)) missing.push('appartement');
         if (!getVal(`${lang}-statut`)) missing.push('statut');
         if (!getVal(`${lang}-nom`)) missing.push('nom');
@@ -1067,6 +1112,8 @@
         const data = {
             timestamp: formatTimestamp(new Date()),
             langue: lang,
+            code_acces: getVal(`${lang}-code`),
+            honeypot: getVal('hp-field'),
             appartement: getVal(`${lang}-apt`),
             statut_occupant: getVal(`${lang}-statut`),
             nom: getVal(`${lang}-nom`),
@@ -1108,6 +1155,18 @@
     };
 
     async function submitFinalForm(lang) {
+        // Piège anti-bot : si le champ invisible est rempli, on affiche
+        // quand même le message de succès (pour ne pas alerter un robot)
+        // mais on n'envoie rien réellement.
+        if (getVal('hp-field')) {
+            hideAllScreens();
+            const msg = SUCCESS_MESSAGES[lang];
+            document.getElementById('success-title').textContent = msg.title;
+            document.getElementById('success-text').innerHTML = msg.text(getVal(`${lang}-email`));
+            document.getElementById('success-msg').style.display = 'block';
+            return;
+        }
+
         // Sécurité : on revalide tout (au cas où l'utilisateur serait revenu
         // en arrière et aurait effacé un champ déjà validé plus tôt).
         const missing1 = validateStep1(lang);
