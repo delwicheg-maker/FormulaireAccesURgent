@@ -4,9 +4,13 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 1.9.0
+    VERSION SYSTÈME : 1.9.1
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v1.9.1 (2026-08-24) - [index.html] Aucun changement Code.gs.
+      Écran 3, bloc récapitulatif : ajout d'une phrase explicative sous
+      le titre invitant à utiliser le bouton "Retour" pour corriger avant
+      l'envoi (FR/NL/EN).
     v1.9.0 (2026-08-24)
       - [index.html] Ajout d'un écran récapitulatif (données des écrans 1
         et 2) affiché automatiquement à l'arrivée sur l'écran 3, avant la
@@ -484,6 +488,7 @@
 
             <div class="step-card">
                 <div class="section-title-green">Récapitulatif de vos informations</div>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">Voici le récapitulatif de vos données. Si une modification ou correction s'impose avant l'envoi, il vous suffit de cliquer sur le bouton en bas « Retour ».</p>
                 <div id="recap-fr" style="font-size: 0.92rem; line-height: 1.9; color: var(--text-main);"></div>
             </div>
 
@@ -682,6 +687,7 @@
 
             <div class="step-card">
                 <div class="section-title-green">Overzicht van uw gegevens</div>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">Hier is het overzicht van uw gegevens. Als een wijziging of correctie nodig is vóór verzending, klik dan gewoon op de knop « Terug » onderaan.</p>
                 <div id="recap-nl" style="font-size: 0.92rem; line-height: 1.9; color: var(--text-main);"></div>
             </div>
 
@@ -880,6 +886,7 @@
 
             <div class="step-card">
                 <div class="section-title-green">Summary of your information</div>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">Here is a summary of your information. If any change or correction is needed before sending, simply click the « Back » button at the bottom.</p>
                 <div id="recap-en" style="font-size: 0.92rem; line-height: 1.9; color: var(--text-main);"></div>
             </div>
 
@@ -908,7 +915,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.9.0</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.9.1</div>
 </div>
 
 <script>
