@@ -4,9 +4,22 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 1.4.0
+    VERSION SYSTÈME : 1.5.0
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v1.5.0 (2026-08-24)
+      - [index.html] Taille de police augmentée globalement (~+15%),
+        ajustements mobile (paddings réduits sur petit écran).
+      - [index.html] Écran 2 : texte légal précisé (dégâts causés par les
+        services d'urgence "à votre porte ou ailleurs").
+      - [index.html] Boîte "Personne de confiance" : suppression du mot
+        "éventuellement".
+      - [index.html] Horodatage reformaté en JJ/MM/AAAA HH:MM (heure de
+        Bruxelles) au lieu du format ISO UTC brut.
+      - [index.html] Message de succès final désormais dans la langue
+        choisie uniquement, mentionne l'email de confirmation envoyé.
+      - [Code.gs] Nouveau : génération d'un PDF récapitulatif envoyé par
+        email à l'adresse fournie, après chaque soumission (FR/NL/EN).
     v1.4.0 (2026-08-22)
       - [index.html] Écran 2 : la boîte "Information légale & Assurances"
         passe du rose/rouge (trop proche visuellement des messages
@@ -121,6 +134,7 @@
             --info-text: #166534;
         }
 
+        html { font-size: 115%; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; padding: 24px 16px; min-height: 100vh; }
         .container { width: 100%; max-width: 680px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; }
@@ -195,7 +209,13 @@
         .success-message { display: none; text-align: center; padding: 40px 20px; }
         .error-message { display: none; text-align: center; padding: 20px; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; margin-top: 16px; font-size: 0.9rem; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        @media (max-width: 580px) { h1.title-green-large { font-size: 1.8rem; } .grid-2, .lang-options { grid-template-columns: 1fr; } }
+        @media (max-width: 580px) {
+            h1.title-green-large { font-size: 1.8rem; }
+            .grid-2, .lang-options { grid-template-columns: 1fr; }
+            body { padding: 12px 8px; }
+            .form-content { padding: 10px 16px 28px 16px; }
+            .step-card { padding: 16px; }
+        }
     </style>
 </head>
 <body>
@@ -325,7 +345,7 @@
                 <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
                     <strong>Information légale & Assurances</strong>
-                    Conformément au droit belge (art. 15 Constitution), la remise d'un double de clés reste facultative. En cas d'urgence ou de sinistre, <strong style="display:inline;">si vous êtes injoignable et qu'aucun accès n'est prévu</strong>, les dégâts causés par l'enfoncement de la porte ne seront pas pris en charge par les assurances.
+                    Conformément au droit belge (art. 15 Constitution), la remise d'un double de clés reste facultative. En cas d'urgence ou de sinistre, <strong style="display:inline;">si vous êtes injoignable et qu'aucun accès n'est prévu</strong>, les dégâts causés par les services d'urgence à votre porte ou ailleurs ne seront pas pris en charge par les assurances.
                 </div>
             </div>
 
@@ -357,7 +377,7 @@
                 <div id="key-contact-fr" class="conditional-box">
                     <div class="section-title-green" style="font-size: 0.95rem;">Personne de confiance</div>
                     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">
-                        Assurez-vous que la personne de confiance que vous avez choisie est atteignable rapidement (moins de 15 minutes) et qu'elle puisse éventuellement se déplacer rapidement pour ouvrir la porte de votre appartement. Gardez à l'esprit le risque de dégâts si l'appartement n'est pas ouvert dans les 15min.
+                        Assurez-vous que la personne de confiance que vous avez choisie est atteignable rapidement (moins de 15 minutes) et qu'elle puisse se déplacer rapidement pour ouvrir la porte de votre appartement. Gardez à l'esprit le risque de dégâts si l'appartement n'est pas ouvert dans les 15min.
                     </p>
                     <div class="grid-2">
                         <div class="form-group"><label>Nom & Prénom <span class="required">*</span></label><input type="text" id="fr-contact-nom" placeholder="Ex: Jean Dupont"></div>
@@ -512,7 +532,7 @@
                 <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
                     <strong>Juridische informatie & Verzekeringen</strong>
-                    Overeenkomstig het Belgisch recht (art. 15 Grondwet) is het afgeven van een reservesleutel optioneel. Bij nood of schade, <strong style="display:inline;">indien u niet bereikbaar bent en er geen toegang is voorzien</strong>, wordt schade veroorzaakt door het forceren van de deur niet gedekt door de verzekeringen.
+                    Overeenkomstig het Belgisch recht (art. 15 Grondwet) is het afgeven van een reservesleutel optioneel. Bij nood of schade, <strong style="display:inline;">indien u niet bereikbaar bent en er geen toegang is voorzien</strong>, wordt schade veroorzaakt door de hulpdiensten aan uw deur of elders niet gedekt door de verzekeringen.
                 </div>
             </div>
 
@@ -544,7 +564,7 @@
                 <div id="key-contact-nl" class="conditional-box">
                     <div class="section-title-green" style="font-size: 0.95rem;">Vertrouwenspersoon</div>
                     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">
-                        Zorg ervoor dat de door u gekozen vertrouwenspersoon snel bereikbaar is (minder dan 15 minuten) en zich eventueel snel kan verplaatsen om de deur van uw appartement te openen. Houd rekening met het risico op schade als het appartement niet binnen 15 minuten wordt geopend.
+                        Zorg ervoor dat de door u gekozen vertrouwenspersoon snel bereikbaar is (minder dan 15 minuten) en zich snel kan verplaatsen om de deur van uw appartement te openen. Houd rekening met het risico op schade als het appartement niet binnen 15 minuten wordt geopend.
                     </p>
                     <div class="grid-2">
                         <div class="form-group"><label>Naam & Voornaam <span class="required">*</span></label><input type="text" id="nl-contact-nom" placeholder="Bv: Jan Peeters"></div>
@@ -699,7 +719,7 @@
                 <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
                     <strong>Legal Notice & Insurance</strong>
-                    In accordance with Belgian law (art. 15 Constitution), providing a duplicate key is optional. In the event of an emergency or incident, <strong style="display:inline;">if you cannot be reached and no access is provided</strong>, damage caused by forcing the door will not be covered by insurance.
+                    In accordance with Belgian law (art. 15 Constitution), providing a duplicate key is optional. In the event of an emergency or incident, <strong style="display:inline;">if you cannot be reached and no access is provided</strong>, damage caused by emergency services to your door or elsewhere will not be covered by insurance.
                 </div>
             </div>
 
@@ -731,7 +751,7 @@
                 <div id="key-contact-en" class="conditional-box">
                     <div class="section-title-green" style="font-size: 0.95rem;">Trusted Contact Person</div>
                     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">
-                        Ensure that your chosen trusted contact person is quickly reachable (under 15 minutes) and can travel quickly if necessary to open your apartment door. Keep in mind the risk of damage if the apartment is not opened within 15 minutes.
+                        Ensure that your chosen trusted contact person is quickly reachable (under 15 minutes) and can travel quickly to open your apartment door. Keep in mind the risk of damage if the apartment is not opened within 15 minutes.
                     </p>
                     <div class="grid-2">
                         <div class="form-group"><label>Full Name <span class="required">*</span></label><input type="text" id="en-contact-nom" placeholder="e.g. John Doe"></div>
@@ -789,14 +809,12 @@
 
         <!-- SUCCÈS -->
         <div id="success-msg" class="success-message">
-            <h2>✅ Transmis / Verzonden / Submitted</h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 8px;">
-                Vos informations d'accès d'urgence ont bien été enregistrées pour la Résidence Schmidt.
-            </p>
+            <h2 id="success-title">✅</h2>
+            <p id="success-text" style="color: var(--text-muted); font-size: 0.95rem; margin-top: 8px; line-height: 1.5;"></p>
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.4.0</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.5.0</div>
 </div>
 
 <script>
@@ -879,6 +897,22 @@
     function getVal(id) {
         const el = document.getElementById(id);
         return el ? el.value.trim() : '';
+    }
+
+    // Formate une date en JJ/MM/AAAA HH:MM, heure de Bruxelles (plus lisible
+    // dans le Google Sheet qu'un horodatage ISO brut en UTC).
+    function formatTimestamp(date) {
+        try {
+            const parts = new Intl.DateTimeFormat('fr-BE', {
+                timeZone: 'Europe/Brussels',
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit', hour12: false
+            }).formatToParts(date);
+            const get = (type) => parts.find(p => p.type === type).value;
+            return `${get('day')}/${get('month')}/${get('year')} ${get('hour')}:${get('minute')}`;
+        } catch (e) {
+            return date.toISOString();
+        }
     }
 
     function getChecked(name) {
@@ -1004,7 +1038,7 @@
     function collectFormData(lang) {
         const keyOption = getChecked(`key_option_${lang}`);
         const data = {
-            timestamp: new Date().toISOString(),
+            timestamp: formatTimestamp(new Date()),
             langue: lang,
             appartement: getVal(`${lang}-apt`),
             statut_occupant: getVal(`${lang}-statut`),
@@ -1029,6 +1063,22 @@
 
         return data;
     }
+
+    // Message de succès affiché dans la langue choisie par l'utilisateur
+    const SUCCESS_MESSAGES = {
+        fr: {
+            title: '✅ Merci d\'avoir rempli ce formulaire !',
+            text: (email) => `Vos informations d'accès d'urgence ont bien été enregistrées pour la Résidence Schmidt. Un mail reprenant ces données vous a été envoyé pour preuve de bonne réception, à l'adresse ${email}.<br><br>Si vous ne le voyez pas, vérifiez également votre boîte de courriers indésirables.`
+        },
+        nl: {
+            title: '✅ Bedankt voor het invullen van dit formulier!',
+            text: (email) => `Uw noodtoegangsgegevens zijn geregistreerd voor Résidence Schmidt. Ter bevestiging is een e-mail met deze gegevens verzonden naar ${email}.<br><br>Als u deze niet ziet, controleer dan ook uw map met ongewenste e-mail.`
+        },
+        en: {
+            title: '✅ Thank you for completing this form!',
+            text: (email) => `Your emergency access information has been successfully saved for Résidence Schmidt. A confirmation email with this data has been sent to ${email}.<br><br>If you don't see it, please also check your spam/junk folder.`
+        }
+    };
 
     async function submitFinalForm(lang) {
         // Sécurité : on revalide tout (au cas où l'utilisateur serait revenu
@@ -1078,6 +1128,9 @@
                 console.warn('GOOGLE_SHEET_ENDPOINT non configuré — données non envoyées :', data);
             }
             hideAllScreens();
+            const msg = SUCCESS_MESSAGES[lang];
+            document.getElementById('success-title').textContent = msg.title;
+            document.getElementById('success-text').innerHTML = msg.text(data.email);
             document.getElementById('success-msg').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err) {
