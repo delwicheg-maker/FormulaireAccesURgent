@@ -4,9 +4,20 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 2.1.1
+    VERSION SYSTÈME : 2.2.0
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v2.2.0 (2026-08-24) - [Code.gs] Aucun changement.
+      - Écran 1 : intro raccourcie ("Réagir vite, pour minimiser les
+        dégâts" + texte plus direct sur l'objectif du formulaire —
+        déterminer la méthode d'accès, pas donner l'accès lui-même).
+      - Écran 1 : ajout d'un petit titre "Définitions :" avant les
+        explications des champs.
+      - Écran 2 : ajout de "Cependant" pour mieux articuler la nuance
+        entre remise facultative et conséquences en cas d'urgence.
+      - Écran 3 (récapitulatif) : retrait du mot "modification",
+        ne garde que "correction".
+      Corrections reportées dans les 3 langues (FR/NL/EN).
     v2.1.1 (2026-08-24) - [Code.gs] Aucun changement.
       Retrait du chronométrage de debug temporaire ajouté pour confirmer
       le correctif sendBeacon (v2.1.0). Mesure confirmée : ~4ms entre le
@@ -365,11 +376,12 @@
             </div>
             
             <h1 class="title-green-large">Accès d'urgence</h1>
-            <p style="text-align:center; font-weight:700; color: var(--primary-green); margin-bottom: 8px; font-size: 1.05rem;">Réagir au plus vite pour minimiser les dégâts</p>
-            <p class="subtitle">L'objectif de ce formulaire est d'établir le moyen d'accéder à votre appartement le plus rapidement possible (moins de 15 minutes) en cas d'urgence (sinistre eau, feu, gaz) et d'éviter que les services d'urgence ne détruisent votre porte.</p>
+            <p style="text-align:center; font-weight:700; color: var(--primary-green); margin-bottom: 8px; font-size: 1.05rem;">Réagir vite, pour minimiser les dégâts</p>
+            <p class="subtitle">Ce formulaire a pour objectif de convenir comment accéder à votre appartement en moins de 15 minutes en cas d'urgence (eau, gaz, feu), si vous êtes injoignable. Et éviter que les services d'urgence ne créent d'autres dégâts.</p>
 
             <div class="step-card">
                 <div class="section-title-green">1. Identification de l'occupant</div>
+                <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Définitions :</p>
                 <p class="field-help">
                     <strong>Code d'accès :</strong> le code communiqué par le Conseil de Copropriété (via WhatsApp ou affichage), nécessaire pour valider votre soumission.<br><br>
                     <strong>Appartement :</strong> l'identification de votre appartement se fait en vous plaçant en front de rue et en regardant l'immeuble : s'il est situé à gauche = (G), si à droite = (D).<br><br>
@@ -453,7 +465,7 @@
                 <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
                     <strong>Information légale & Assurances</strong>
-                    Conformément au droit belge (art. 15 Constitution), la remise d'un double de clés reste facultative. En cas d'urgence ou de sinistre, <strong style="display:inline;">si vous êtes injoignable et qu'aucun accès n'est prévu</strong>, les dégâts causés par les services d'urgence à votre porte ou ailleurs ne seront pas pris en charge par les assurances.
+                    Conformément au droit belge (art. 15 Constitution), la remise d'un double de clés reste facultative. Cependant, en cas d'urgence ou de sinistre, <strong style="display:inline;">si vous êtes injoignable et qu'aucun accès n'est prévu</strong>, les dégâts causés par les services d'urgence à votre porte ou ailleurs ne seront pas pris en charge par les assurances.
                 </div>
             </div>
 
@@ -525,7 +537,7 @@
 
             <div class="step-card">
                 <div class="section-title-green">Récapitulatif de vos informations</div>
-                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">Voici le récapitulatif de vos données. Si une modification ou correction s'impose avant l'envoi, il vous suffit de cliquer sur le bouton en bas « Retour ».</p>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">Voici le récapitulatif de vos données. Si une correction s'impose avant l'envoi, il vous suffit de cliquer sur le bouton en bas « Retour ».</p>
                 <div id="recap-fr" style="font-size: 0.92rem; line-height: 1.9; color: var(--text-main);"></div>
             </div>
 
@@ -565,11 +577,12 @@
             </div>
             
             <h1 class="title-green-large">Noodtoegang</h1>
-            <p style="text-align:center; font-weight:700; color: var(--primary-green); margin-bottom: 8px; font-size: 1.05rem;">Zo snel mogelijk reageren om de schade te beperken</p>
-            <p class="subtitle">Het doel van dit formulier is om de snelst mogelijke toegang tot uw appartement vast te stellen (minder dan 15 minuten) in geval van nood (waterschade, brand, gas) en te voorkomen dat hulpdiensten uw deur forceren.</p>
+            <p style="text-align:center; font-weight:700; color: var(--primary-green); margin-bottom: 8px; font-size: 1.05rem;">Snel reageren om de schade te beperken</p>
+            <p class="subtitle">Dit formulier heeft als doel af te spreken hoe u binnen 15 minuten toegang krijgt tot uw appartement in geval van nood (water, gas, brand), indien u niet bereikbaar bent. En te voorkomen dat de hulpdiensten bijkomende schade veroorzaken.</p>
 
             <div class="step-card">
                 <div class="section-title-green">1. Identificatie van de bewoner</div>
+                <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Definities:</p>
                 <p class="field-help">
                     <strong>Toegangscode:</strong> de code meegedeeld door de Raad van Mede-eigendom (via WhatsApp of affiche), vereist om uw indiening te valideren.<br><br>
                     <strong>Appartement:</strong> de identificatie van uw appartement gebeurt door voor de straat te gaan staan en naar het gebouw te kijken: als het links ligt = (L), als het rechts ligt = (R).<br><br>
@@ -653,7 +666,7 @@
                 <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
                     <strong>Juridische informatie & Verzekeringen</strong>
-                    Overeenkomstig het Belgisch recht (art. 15 Grondwet) is het afgeven van een reservesleutel optioneel. Bij nood of schade, <strong style="display:inline;">indien u niet bereikbaar bent en er geen toegang is voorzien</strong>, wordt schade veroorzaakt door de hulpdiensten aan uw deur of elders niet gedekt door de verzekeringen.
+                    Overeenkomstig het Belgisch recht (art. 15 Grondwet) is het afgeven van een reservesleutel optioneel. Echter, bij nood of schade, <strong style="display:inline;">indien u niet bereikbaar bent en er geen toegang is voorzien</strong>, wordt schade veroorzaakt door de hulpdiensten aan uw deur of elders niet gedekt door de verzekeringen.
                 </div>
             </div>
 
@@ -725,7 +738,7 @@
 
             <div class="step-card">
                 <div class="section-title-green">Overzicht van uw gegevens</div>
-                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">Hier is het overzicht van uw gegevens. Als een wijziging of correctie nodig is vóór verzending, klik dan gewoon op de knop « Terug » onderaan.</p>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">Hier is het overzicht van uw gegevens. Als een correctie nodig is vóór verzending, klik dan gewoon op de knop « Terug » onderaan.</p>
                 <div id="recap-nl" style="font-size: 0.92rem; line-height: 1.9; color: var(--text-main);"></div>
             </div>
 
@@ -765,11 +778,12 @@
             </div>
             
             <h1 class="title-green-large">Emergency Access</h1>
-            <p style="text-align:center; font-weight:700; color: var(--primary-green); margin-bottom: 8px; font-size: 1.05rem;">Act fast to minimize the damage</p>
-            <p class="subtitle">The purpose of this form is to establish the quickest way to access your apartment (under 15 minutes) in case of emergency (water damage, fire, gas) and prevent emergency services from breaking down your door.</p>
+            <p style="text-align:center; font-weight:700; color: var(--primary-green); margin-bottom: 8px; font-size: 1.05rem;">Act fast, to minimize the damage</p>
+            <p class="subtitle">This form aims to agree in advance how to access your apartment within 15 minutes in case of an emergency (water, gas, fire), if you are unreachable. And prevent emergency services from causing further damage.</p>
 
             <div class="step-card">
                 <div class="section-title-green">1. Occupant Identification</div>
+                <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Definitions:</p>
                 <p class="field-help">
                     <strong>Access code:</strong> the code communicated by the Co-ownership Council (via WhatsApp or notice board), required to validate your submission.<br><br>
                     <strong>Apartment:</strong> to identify your apartment, stand facing the street and look at the building: if it is on the left = (L), if on the right = (R).<br><br>
@@ -853,7 +867,7 @@
                 <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
                     <strong>Legal Notice & Insurance</strong>
-                    In accordance with Belgian law (art. 15 Constitution), providing a duplicate key is optional. In the event of an emergency or incident, <strong style="display:inline;">if you cannot be reached and no access is provided</strong>, damage caused by emergency services to your door or elsewhere will not be covered by insurance.
+                    In accordance with Belgian law (art. 15 Constitution), providing a duplicate key is optional. However, in the event of an emergency or incident, <strong style="display:inline;">if you cannot be reached and no access is provided</strong>, damage caused by emergency services to your door or elsewhere will not be covered by insurance.
                 </div>
             </div>
 
@@ -925,7 +939,7 @@
 
             <div class="step-card">
                 <div class="section-title-green">Summary of your information</div>
-                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">Here is a summary of your information. If any change or correction is needed before sending, simply click the « Back » button at the bottom.</p>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">Here is a summary of your information. If a correction is needed before sending, simply click the « Back » button at the bottom.</p>
                 <div id="recap-en" style="font-size: 0.92rem; line-height: 1.9; color: var(--text-main);"></div>
             </div>
 
@@ -954,7 +968,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v2.1.1</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v2.2.0</div>
 </div>
 
 <script>
