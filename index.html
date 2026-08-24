@@ -4,9 +4,19 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 2.0.1
+    VERSION SYSTÈME : 2.1.0
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v2.1.0 (2026-08-24) - [Code.gs] Aucun changement.
+      Écran 3 : remplacement du fetch() attendu par navigator.sendBeacon()
+      pour l'envoi final. Le navigateur met la requête en file d'attente
+      et l'envoie de façon fiable en arrière-plan, sans que la page
+      attende la fin du traitement côté serveur (Sheet + tracker + PDF +
+      2 emails, plusieurs secondes chez Google). L'écran de remerciement
+      s'affiche donc quasi instantanément après le clic, tout en
+      garantissant l'envoi même si l'onglet est fermé juste après. Repli
+      automatique sur l'ancien comportement (fetch attendu) si sendBeacon
+      n'est pas disponible.
     v2.0.1 (2026-08-24) - [Code.gs] Aucun changement index.html.
       Feuille "Suivi des réponses" : ajout d'un compteur global en
       colonne D, format "X/19".
@@ -938,7 +948,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v2.0.1</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v2.1.0</div>
 </div>
 
 <script>
@@ -1298,27 +1308,54 @@
         const originalText = btn.textContent;
         btn.disabled = true;
         btn.textContent = '...';
+        const t0 = performance.now(); // --- DEBUG TEMPORAIRE ---
 
-        try {
-            if (GOOGLE_SHEET_ENDPOINT && GOOGLE_SHEET_ENDPOINT.indexOf('COLLEZ_ICI') === -1) {
-                // Le Web App Apps Script ne renvoie pas d'en-têtes CORS lisibles,
-                // on envoie donc en mode no-cors : la requête part bien, on ne peut
-                // juste pas lire la réponse depuis le navigateur.
-                await fetch(GOOGLE_SHEET_ENDPOINT, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(data)
-                });
-            } else {
-                console.warn('GOOGLE_SHEET_ENDPOINT non configuré — données non envoyées :', data);
-            }
+        const showSuccess = (debugInfo) => {
             hideAllScreens();
             const msg = SUCCESS_MESSAGES[lang];
             document.getElementById('success-title').textContent = msg.title;
-            document.getElementById('success-text').innerHTML = msg.text(data.email);
+            document.getElementById('success-text').innerHTML = msg.text(data.email)
+                + (debugInfo ? `<br><br><span style="font-size:0.75rem; color:#dc2626; font-weight:700;">[DEBUG] ${debugInfo}</span>` : '');
             document.getElementById('success-msg').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        if (!GOOGLE_SHEET_ENDPOINT || GOOGLE_SHEET_ENDPOINT.indexOf('COLLEZ_ICI') !== -1) {
+            console.warn('GOOGLE_SHEET_ENDPOINT non configuré — données non envoyées :', data);
+            showSuccess();
+            return;
+        }
+
+        // sendBeacon met la requête en file d'attente au niveau du navigateur
+        // et l'envoie de façon fiable en arrière-plan, sans que la page ait
+        // besoin d'attendre la fin du traitement côté serveur (écriture du
+        // Sheet + mise à jour des onglets + génération du PDF + envoi des
+        // emails, qui prend plusieurs secondes chez Google). L'écran de
+        // succès s'affiche donc quasi instantanément, tout en garantissant
+        // l'envoi même si l'utilisateur ferme l'onglet juste après.
+        let queued = false;
+        if (navigator.sendBeacon) {
+            const blob = new Blob([JSON.stringify(data)], { type: 'text/plain;charset=utf-8' });
+            queued = navigator.sendBeacon(GOOGLE_SHEET_ENDPOINT, blob);
+        }
+
+        if (queued) {
+            const ms = Math.round(performance.now() - t0); // --- DEBUG ---
+            showSuccess(`v2.1.0 · sendBeacon OK · ${ms} ms avant affichage`);
+            return;
+        }
+
+        // Repli si sendBeacon est indisponible ou a échoué à mettre la
+        // requête en file (rare) : ancien comportement, avec attente.
+        try {
+            await fetch(GOOGLE_SHEET_ENDPOINT, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(data)
+            });
+            const ms = Math.round(performance.now() - t0); // --- DEBUG ---
+            showSuccess(`v2.1.0 · repli fetch (sendBeacon indispo/échoué) · ${ms} ms`);
         } catch (err) {
             const errorBox = document.getElementById(`error-${lang}-3`);
             errorBox.style.display = 'block';
