@@ -4,9 +4,17 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 1.6.0
+    VERSION SYSTÈME : 1.7.0
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v1.7.0 (2026-08-24)
+      - [index.html] Écran 2, boîte "Personne de confiance" : mise en gras
+        de "qu'elle puisse se déplacer rapidement" (et équivalents NL/EN).
+      - [index.html] Écran de remerciement final : dernière phrase mise
+        en italique, dans les 3 langues.
+      - [Code.gs] PDF récapitulatif : libellés en vert, réponses de
+        l'utilisateur en noir. Titres de sections agrandis pour mieux
+        différencier les sections visuellement.
     v1.6.0 (2026-08-24)
       - [index.html] En-tête : ajout d'une deuxième ligne "Conseil de
         Copropriété" sous "Résidence Schmidt", bas du bloc texte aligné
@@ -396,7 +404,7 @@
                 <div id="key-contact-fr" class="conditional-box">
                     <div class="section-title-green" style="font-size: 0.95rem;">Personne de confiance</div>
                     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">
-                        Assurez-vous que la personne de confiance que vous avez choisie est atteignable rapidement (moins de 15 minutes) et qu'elle puisse se déplacer rapidement pour ouvrir la porte de votre appartement. Gardez à l'esprit le risque de dégâts si l'appartement n'est pas ouvert dans les 15min.
+                        Assurez-vous que la personne de confiance que vous avez choisie est atteignable rapidement (moins de 15 minutes) et <strong>qu'elle puisse se déplacer rapidement</strong> pour ouvrir la porte de votre appartement. Gardez à l'esprit le risque de dégâts si l'appartement n'est pas ouvert dans les 15min.
                     </p>
                     <div class="grid-2">
                         <div class="form-group"><label>Nom & Prénom <span class="required">*</span></label><input type="text" id="fr-contact-nom" placeholder="Ex: Jean Dupont"></div>
@@ -583,7 +591,7 @@
                 <div id="key-contact-nl" class="conditional-box">
                     <div class="section-title-green" style="font-size: 0.95rem;">Vertrouwenspersoon</div>
                     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">
-                        Zorg ervoor dat de door u gekozen vertrouwenspersoon snel bereikbaar is (minder dan 15 minuten) en zich snel kan verplaatsen om de deur van uw appartement te openen. Houd rekening met het risico op schade als het appartement niet binnen 15 minuten wordt geopend.
+                        Zorg ervoor dat de door u gekozen vertrouwenspersoon snel bereikbaar is (minder dan 15 minuten) en <strong>zich snel kan verplaatsen</strong> om de deur van uw appartement te openen. Houd rekening met het risico op schade als het appartement niet binnen 15 minuten wordt geopend.
                     </p>
                     <div class="grid-2">
                         <div class="form-group"><label>Naam & Voornaam <span class="required">*</span></label><input type="text" id="nl-contact-nom" placeholder="Bv: Jan Peeters"></div>
@@ -770,7 +778,7 @@
                 <div id="key-contact-en" class="conditional-box">
                     <div class="section-title-green" style="font-size: 0.95rem;">Trusted Contact Person</div>
                     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">
-                        Ensure that your chosen trusted contact person is quickly reachable (under 15 minutes) and can travel quickly to open your apartment door. Keep in mind the risk of damage if the apartment is not opened within 15 minutes.
+                        Ensure that your chosen trusted contact person is quickly reachable (under 15 minutes) and <strong>can travel quickly</strong> to open your apartment door. Keep in mind the risk of damage if the apartment is not opened within 15 minutes.
                     </p>
                     <div class="grid-2">
                         <div class="form-group"><label>Full Name <span class="required">*</span></label><input type="text" id="en-contact-nom" placeholder="e.g. John Doe"></div>
@@ -833,7 +841,7 @@
         </div>
 
     </div>
-    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.6.0</div>
+    <div style="text-align:center; padding: 10px; font-size: 0.7rem; color: #94a3b8;">v1.7.0</div>
 </div>
 
 <script>
@@ -1087,15 +1095,15 @@
     const SUCCESS_MESSAGES = {
         fr: {
             title: '✅ Merci d\'avoir rempli ce formulaire !',
-            text: (email) => `Vos informations d'accès d'urgence ont bien été enregistrées pour la Résidence Schmidt. Un mail reprenant ces données vous a été envoyé pour preuve de bonne réception, à l'adresse :<br><strong style="display:block; text-align:center; margin-top:6px;">${email}</strong><br>Si vous ne le voyez pas, vérifiez également votre boîte de courriers indésirables.`
+            text: (email) => `Vos informations d'accès d'urgence ont bien été enregistrées pour la Résidence Schmidt. Un mail reprenant ces données vous a été envoyé pour preuve de bonne réception, à l'adresse :<br><strong style="display:block; text-align:center; margin-top:6px;">${email}</strong><br><em>Si vous ne le voyez pas, vérifiez également votre boîte de courriers indésirables.</em>`
         },
         nl: {
             title: '✅ Bedankt voor het invullen van dit formulier!',
-            text: (email) => `Uw noodtoegangsgegevens zijn geregistreerd voor Résidence Schmidt. Ter bevestiging is een e-mail met deze gegevens verzonden naar:<br><strong style="display:block; text-align:center; margin-top:6px;">${email}</strong><br>Als u deze niet ziet, controleer dan ook uw map met ongewenste e-mail.`
+            text: (email) => `Uw noodtoegangsgegevens zijn geregistreerd voor Résidence Schmidt. Ter bevestiging is een e-mail met deze gegevens verzonden naar:<br><strong style="display:block; text-align:center; margin-top:6px;">${email}</strong><br><em>Als u deze niet ziet, controleer dan ook uw map met ongewenste e-mail.</em>`
         },
         en: {
             title: '✅ Thank you for completing this form!',
-            text: (email) => `Your emergency access information has been successfully saved for Résidence Schmidt. A confirmation email with this data has been sent to:<br><strong style="display:block; text-align:center; margin-top:6px;">${email}</strong><br>If you don't see it, please also check your spam/junk folder.`
+            text: (email) => `Your emergency access information has been successfully saved for Résidence Schmidt. A confirmation email with this data has been sent to:<br><strong style="display:block; text-align:center; margin-top:6px;">${email}</strong><br><em>If you don't see it, please also check your spam/junk folder.</em>`
         }
     };
 
