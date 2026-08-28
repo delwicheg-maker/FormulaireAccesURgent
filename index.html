@@ -4,9 +4,31 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 2.3.1
+    VERSION SYSTÈME : 2.4.1
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v2.4.1 (2026-08-28) - [Code.gs] Aucun changement.
+      Nouvelle image de bandeau (1585x672 px). Chargée via le service de
+      vignettes Google Drive (sz=w900) pour limiter le poids ; aucun
+      ajustement CSS nécessaire, le bandeau utilise déjà une hauteur
+      fixe avec recadrage automatique (background-size: cover),
+      compatible avec n'importe quel ratio d'image.
+    v2.4.0 (2026-08-24) - [Code.gs] Aucun changement.
+      - Logo bas de page : la 2e ligne "Conseil de Copropriété" est
+        désormais étirée par un espacement des caractères calculé
+        dynamiquement pour égaler la largeur de la 1ère ligne
+        "RÉSIDENCE SCHMIDT", sans changer la taille de police.
+      - Écran 1 (+ contact de confiance écran 2) : les numéros de
+        téléphone collés en vrac sont automatiquement mis en forme au
+        format "+32 4XX XX XX XX" dès que le champ perd le focus (ex:
+        en passant au champ suivant).
+      - Écran 2 : passage à la ligne avant "Cependant...", reformulation
+        ("dégâts causés par les services d'urgence à votre appartement
+        (porte défoncée ou autre)"), mise en gras de la conséquence
+        finale ("ne seront pas pris en charge par les assurances").
+      - Écran 2 : mise en gras de toute la phrase d'introduction
+        ("En cas d'urgence grave, dites-nous comment...").
+      Corrections reportées dans les 3 langues (FR/NL/EN).
     v2.3.1 (2026-08-24) - [Code.gs] Aucun changement.
       Bandeau : ajout d'une marge de 5mm de chaque côté (gauche, droite,
       haut) entre la bordure arrondie et les bords du formulaire, pour
@@ -250,7 +272,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; padding: 24px 16px; min-height: 100vh; }
         .container { width: 100%; max-width: 680px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; }
-        .banner { width: calc(100% - 10mm); height: 260px; background-image: url('https://drive.google.com/thumbnail?id=1aAhQb880N8CVTKg6MJX57ZLdxiArkXDy&sz=w900'); background-size: cover; background-position: center; position: relative; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; margin: 5mm 5mm 0 5mm; }
+        .banner { width: calc(100% - 10mm); height: 260px; background-image: url('https://drive.google.com/thumbnail?id=1N6j9Lh7mybyaX4UiulN7ZIeIlq9uApce&sz=w900'); background-size: cover; background-position: center; position: relative; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; margin: 5mm 5mm 0 5mm; }
         .brand-header { display: flex; align-items: flex-end; gap: 12px; margin-top: -22px; margin-left: 24px; margin-bottom: 16px; position: relative; z-index: 3; }
         .icon-avatar { width: 64px; height: 64px; background: #ffffff; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; border: 3px solid #ffffff; overflow: hidden; flex-shrink: 0; }
         .icon-avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -475,13 +497,13 @@
                 <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
                     <strong>Information légale & Assurances</strong>
-                    Conformément au droit belge (art. 15 Constitution), la remise d'un double de clés reste facultative. Cependant, en cas d'urgence ou de sinistre, <strong style="display:inline;">si vous êtes injoignable et qu'aucun accès n'est prévu</strong>, les dégâts causés par les services d'urgence à votre porte ou ailleurs ne seront pas pris en charge par les assurances.
+                    Conformément au droit belge (art. 15 Constitution), la remise d'un double de clés reste facultative.<br><br>Cependant, en cas d'urgence ou de sinistre, <strong style="display:inline;">si vous êtes injoignable et qu'aucun accès n'est prévu</strong>, les dégâts causés par les services d'urgence à votre appartement (porte défoncée ou autre) <strong style="display:inline;">ne seront pas pris en charge par les assurances.</strong>
                 </div>
             </div>
 
             <div class="step-card">
                 <div class="section-title-green">2. Modalités d'accès en cas d'urgence grave</div>
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">En cas d'urgence grave, dites-nous comment vous souhaitez que l'on accède à votre appartement.</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 700;">En cas d'urgence grave, dites-nous comment vous souhaitez que l'on accède à votre appartement.</p>
                 
                 <div class="form-group">
                     <div class="radio-group">
@@ -676,13 +698,13 @@
                 <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
                     <strong>Juridische informatie & Verzekeringen</strong>
-                    Overeenkomstig het Belgisch recht (art. 15 Grondwet) is het afgeven van een reservesleutel optioneel. Echter, bij nood of schade, <strong style="display:inline;">indien u niet bereikbaar bent en er geen toegang is voorzien</strong>, wordt schade veroorzaakt door de hulpdiensten aan uw deur of elders niet gedekt door de verzekeringen.
+                    Overeenkomstig het Belgisch recht (art. 15 Grondwet) is het afgeven van een reservesleutel optioneel.<br><br>Echter, bij nood of schade, <strong style="display:inline;">indien u niet bereikbaar bent en er geen toegang is voorzien</strong>, wordt schade veroorzaakt door de hulpdiensten aan uw appartement (geforceerde deur of anders) <strong style="display:inline;">niet gedekt door de verzekeringen.</strong>
                 </div>
             </div>
 
             <div class="step-card">
                 <div class="section-title-green">2. Toegangsprocedure bij ernstig noodgeval</div>
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">Laat ons weten hoe u wilt dat wij in geval van nood toegang krijgen tot uw appartement.</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 700;">Laat ons weten hoe u wilt dat wij in geval van nood toegang krijgen tot uw appartement.</p>
                 
                 <div class="form-group">
                     <div class="radio-group">
@@ -877,13 +899,13 @@
                 <svg class="svg-icon-large-green" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <div>
                     <strong>Legal Notice & Insurance</strong>
-                    In accordance with Belgian law (art. 15 Constitution), providing a duplicate key is optional. However, in the event of an emergency or incident, <strong style="display:inline;">if you cannot be reached and no access is provided</strong>, damage caused by emergency services to your door or elsewhere will not be covered by insurance.
+                    In accordance with Belgian law (art. 15 Constitution), providing a duplicate key is optional.<br><br>However, in the event of an emergency or incident, <strong style="display:inline;">if you cannot be reached and no access is provided</strong>, damage caused by emergency services to your apartment (forced door or otherwise) <strong style="display:inline;">will not be covered by insurance.</strong>
                 </div>
             </div>
 
             <div class="step-card">
                 <div class="section-title-green">2. Access Procedures in Case of Serious Emergency</div>
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">In case of a serious emergency, please let us know how you would like us to access your apartment.</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 700;">In case of a serious emergency, please let us know how you would like us to access your apartment.</p>
                 
                 <div class="form-group">
                     <div class="radio-group">
@@ -988,7 +1010,7 @@
             <div class="footer-brand-subtitle">Conseil de Copropriété</div>
         </div>
     </div>
-    <div style="text-align:center; padding: 2px 10px 10px 10px; font-size: 0.7rem; color: #94a3b8;">v2.3.1</div>
+    <div style="text-align:center; padding: 2px 10px 10px 10px; font-size: 0.7rem; color: #94a3b8;">v2.4.1</div>
 </div>
 
 <script>
@@ -1022,6 +1044,37 @@
                 updateConsentState(lang);
             }
         });
+
+        // Mise en forme automatique des numéros de téléphone (écran 1 +
+        // contact de confiance à l'écran 2) au format "+32 4XX XX XX XX"
+        // dès que l'utilisateur quitte le champ (ex: en passant à l'email).
+        ['fr', 'nl', 'en'].forEach(function(lang) {
+            [`${lang}-tel`, `${lang}-contact-tel`].forEach(function(id) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('blur', function() {
+                        el.value = formatPhoneNumber(el.value);
+                    });
+                }
+            });
+        });
+
+        // Ajuste l'espacement des caractères de la 2e ligne du logo
+        // ("Conseil de Copropriété") pour que sa largeur affichée égale
+        // celle de la 1ère ligne ("RÉSIDENCE SCHMIDT"), sans changer la
+        // taille de police — mesuré dynamiquement (plus fiable qu'une
+        // valeur fixe, qui varierait selon l'appareil/la police système).
+        const brandName = document.querySelector('.footer-brand-name');
+        const brandSubtitle = document.querySelector('.footer-brand-subtitle');
+        if (brandName && brandSubtitle) {
+            const targetWidth = brandName.getBoundingClientRect().width;
+            const naturalWidth = brandSubtitle.getBoundingClientRect().width;
+            const charCount = brandSubtitle.textContent.length;
+            if (naturalWidth > 0 && charCount > 1) {
+                const extraSpacing = (targetWidth - naturalWidth) / (charCount - 1);
+                brandSubtitle.style.letterSpacing = extraSpacing + 'px';
+            }
+        }
     });
 
     function hideAllScreens() {
@@ -1087,6 +1140,43 @@
         } catch (e) {
             return date.toISOString();
         }
+    }
+
+    // Met en forme un numéro de téléphone au format "+32 4XX XX XX XX"
+    // (celui affiché en placeholder), pour que les numéros collés en
+    // vrac par les utilisateurs pressés s'harmonisent automatiquement.
+    // - Un numéro belge local commençant par 0 (ex: 0479123456) est
+    //   converti en international (+32 479 12 34 56).
+    // - Un numéro déjà international (commençant par +) est simplement
+    //   regroupé (indicatif, puis blocs de 3-2-2-2 chiffres).
+    // - Tout ce qui ne ressemble pas à un numéro reconnaissable est
+    //   laissé tel quel, pour ne jamais corrompre une saisie valide.
+    function formatPhoneNumber(raw) {
+        if (!raw) return raw;
+        const trimmed = raw.trim();
+        let hasPlus = trimmed.startsWith('+');
+        let digits = trimmed.replace(/\D/g, '');
+        if (!digits) return raw;
+
+        if (!hasPlus && digits.startsWith('0')) {
+            digits = '32' + digits.substring(1);
+            hasPlus = true;
+        }
+        if (!hasPlus) return raw;
+
+        const countryCode = digits.substring(0, 2);
+        let rest = digits.substring(2);
+        if (rest.length < 5) return raw; // trop court pour être un numéro complet
+
+        const groups = [];
+        groups.push(rest.substring(0, 3));
+        rest = rest.substring(3);
+        while (rest.length > 0) {
+            groups.push(rest.substring(0, 2));
+            rest = rest.substring(2);
+        }
+
+        return '+' + countryCode + ' ' + groups.join(' ');
     }
 
     function getChecked(name) {
