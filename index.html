@@ -4,9 +4,27 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 2.11.1
+    VERSION SYSTÈME : 2.13.0
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v2.13.0 (2026-08-28) - [index.html] Aucun changement.
+      Sujet de l'email au Conseil enrichi de l'option d'accès choisie.
+      Côté Code.gs uniquement. Numéro synchronisé.
+    v2.12.1 (2026-08-28)
+      - [Code.gs] Email syndic : signature simplifiée + remarque
+        distincte (petite, italique) sur le caractère automatique du
+        message et la redirection par le syndic Vemer & Gérard.
+      - [index.html] Écran 2 : boîte d'information ajoutée sous la 5e
+        option, précisant qu'un mail sera redirigé vers le propriétaire.
+    v2.12.0 (2026-08-28) - NOUVELLE FONCTIONNALITÉ
+      - Statut occupant simplifié : "Propriétaire" au lieu de
+        "Propriétaire occupant" (FR/NL/EN).
+      - Nouvelle 5e option à l'écran 2, visible uniquement pour un
+        locataire : "Je n'ai pas de double de clé disponible - merci
+        de contacter mon propriétaire". Masquée pour un propriétaire.
+      - [Code.gs] Email dédié au syndic dans ce cas (via colonne B de
+        "Destinataires"), statut "⚠️ En attente propriétaire" dans
+        "Suivi des réponses" tant que non résolu.
     v2.11.1 (2026-08-28) - PRÉVENTIF - [index.html] Aucun changement.
       Protection défensive ajoutée côté Code.gs : suppression physique
       des lignes/colonnes résiduelles dans "Dernière par appartement" et
@@ -503,7 +521,7 @@
                         <label>Statut de l'occupant <span class="required">*</span></label>
                         <select id="fr-statut">
                             <option value="">-- Sélectionner --</option>
-                            <option value="proprietaire">Propriétaire occupant</option>
+                            <option value="proprietaire">Propriétaire</option>
                             <option value="locataire">Locataire</option>
                         </select>
                     </div>
@@ -579,6 +597,10 @@
                             <input type="radio" name="key_option_fr" value="emergency_only" onclick="toggleKeyDetails('fr', 'none')">
                             <span>Je souhaite être contacté en priorité (conscient des risques de dégâts au-delà des 15 min).</span>
                         </label>
+                        <label class="option-label" id="tenant-option-fr" style="display:none;">
+                            <input type="radio" name="key_option_fr" value="contact_owner" onclick="toggleKeyDetails('fr', 'owner')">
+                            <span>Je n'ai pas de double de clé disponible (locataire) — merci de contacter mon propriétaire.</span>
+                        </label>
                     </div>
                 </div>
 
@@ -603,6 +625,7 @@
 
                 <div id="key-wish-fr" class="conditional-box"><p style="font-size:0.88rem;">Un membre du Conseil prendra contact pour la remise du pli scellé.</p></div>
                 <div id="key-given-fr" class="conditional-box"><p style="font-size:0.88rem;">Pli scellé répertorié dans le registre sécurisé.</p></div>
+                <div id="key-owner-fr" class="conditional-box"><p style="font-size:0.88rem;">Un mail de demande sera redirigé vers votre propriétaire par le syndic.</p></div>
             </div>
 
             <div id="error-fr-2" class="error-message"></div>
@@ -704,7 +727,7 @@
                         <label>Statuut van de bewoner <span class="required">*</span></label>
                         <select id="nl-statut">
                             <option value="">-- Selecteer --</option>
-                            <option value="proprietaire">Bewonende eigenaar</option>
+                            <option value="proprietaire">Eigenaar</option>
                             <option value="locataire">Huurder</option>
                         </select>
                     </div>
@@ -780,6 +803,10 @@
                             <input type="radio" name="key_option_nl" value="emergency_only" onclick="toggleKeyDetails('nl', 'none')">
                             <span>Ik wil bij prioriteit gecontacteerd worden (bewust van het risico op schade na 15 min).</span>
                         </label>
+                        <label class="option-label" id="tenant-option-nl" style="display:none;">
+                            <input type="radio" name="key_option_nl" value="contact_owner" onclick="toggleKeyDetails('nl', 'owner')">
+                            <span>Ik heb geen reservesleutel beschikbaar (huurder) — gelieve contact op te nemen met mijn eigenaar.</span>
+                        </label>
                     </div>
                 </div>
 
@@ -804,6 +831,7 @@
 
                 <div id="key-wish-nl" class="conditional-box"><p style="font-size:0.88rem;">Een lid van de Raad zal contact opnemen voor de overdracht van de verzegelde enveloppe.</p></div>
                 <div id="key-given-nl" class="conditional-box"><p style="font-size:0.88rem;">Verzegelde enveloppe geregistreerd in het beveiligde register.</p></div>
+                <div id="key-owner-nl" class="conditional-box"><p style="font-size:0.88rem;">Een e-mail met het verzoek wordt door de syndicus doorgestuurd naar uw eigenaar.</p></div>
             </div>
 
             <div id="error-nl-2" class="error-message"></div>
@@ -905,7 +933,7 @@
                         <label>Occupant Status <span class="required">*</span></label>
                         <select id="en-statut">
                             <option value="">-- Select --</option>
-                            <option value="proprietaire">Owner occupier</option>
+                            <option value="proprietaire">Owner</option>
                             <option value="locataire">Tenant</option>
                         </select>
                     </div>
@@ -981,6 +1009,10 @@
                             <input type="radio" name="key_option_en" value="emergency_only" onclick="toggleKeyDetails('en', 'none')">
                             <span>I wish to be contacted first (aware of the risk of damage beyond 15 min).</span>
                         </label>
+                        <label class="option-label" id="tenant-option-en" style="display:none;">
+                            <input type="radio" name="key_option_en" value="contact_owner" onclick="toggleKeyDetails('en', 'owner')">
+                            <span>I do not have a spare key available (tenant) — please contact my landlord.</span>
+                        </label>
                     </div>
                 </div>
 
@@ -1005,6 +1037,7 @@
 
                 <div id="key-wish-en" class="conditional-box"><p style="font-size:0.88rem;">A Council member will contact you for the handover of the sealed envelope.</p></div>
                 <div id="key-given-en" class="conditional-box"><p style="font-size:0.88rem;">Sealed envelope recorded in the secure registry.</p></div>
+                <div id="key-owner-en" class="conditional-box"><p style="font-size:0.88rem;">A request email will be forwarded to your landlord by the property manager.</p></div>
             </div>
 
             <div id="error-en-2" class="error-message"></div>
@@ -1066,7 +1099,7 @@
             <div class="footer-brand-subtitle">Conseil de Copropriété</div>
         </div>
     </div>
-    <div style="text-align:center; padding: 2px 10px 10px 10px; font-size: 0.7rem; color: #94a3b8;">v2.11.1</div>
+    <div style="text-align:center; padding: 2px 10px 10px 10px; font-size: 0.7rem; color: #94a3b8;">v2.13.0</div>
 </div>
 
 <script>
@@ -1167,14 +1200,17 @@
         const contactBox = document.getElementById(`key-contact-${lang}`);
         const wishBox = document.getElementById(`key-wish-${lang}`);
         const givenBox = document.getElementById(`key-given-${lang}`);
+        const ownerBox = document.getElementById(`key-owner-${lang}`);
 
         if(contactBox) contactBox.classList.remove('active');
         if(wishBox) wishBox.classList.remove('active');
         if(givenBox) givenBox.classList.remove('active');
+        if(ownerBox) ownerBox.classList.remove('active');
 
         if (type === 'contact' && contactBox) contactBox.classList.add('active');
         else if (type === 'wish' && wishBox) wishBox.classList.add('active');
         else if (type === 'given' && givenBox) givenBox.classList.add('active');
+        else if (type === 'owner' && ownerBox) ownerBox.classList.add('active');
     }
 
     function getVal(id) {
@@ -1359,8 +1395,30 @@
         showError(lang, fromStep, missing);
 
         if (missing.length > 0) return;
+        if (toStep === 2) updateTenantOptionVisibility(lang);
         if (toStep === 3) populateRecap(lang);
         goToNext(lang, fromStep, toStep);
+    }
+
+    // Affiche la 5e option ("pas de double de clé, contacter le
+    // propriétaire") uniquement si "Locataire" a été sélectionné à
+    // l'écran 1 ; la masque (et décoche si besoin) pour un propriétaire,
+    // pour qui cette option n'a pas de sens.
+    function updateTenantOptionVisibility(lang) {
+        const statutSelect = document.getElementById(`${lang}-statut`);
+        const tenantOption = document.getElementById(`tenant-option-${lang}`);
+        if (!statutSelect || !tenantOption) return;
+
+        const isTenant = statutSelect.value === 'locataire';
+        tenantOption.style.display = isTenant ? 'flex' : 'none';
+
+        if (!isTenant) {
+            const radio = tenantOption.querySelector('input[type="radio"]');
+            if (radio && radio.checked) {
+                radio.checked = false;
+                toggleKeyDetails(lang, 'none');
+            }
+        }
     }
 
     // Libellés du récapitulatif, par langue
