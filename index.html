@@ -4,9 +4,17 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 2.4.1
+    VERSION SYSTÈME : 2.4.2
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v2.4.2 (2026-08-28) - [Code.gs] Aucun changement.
+      Correction du calcul d'espacement de la 2e ligne du logo (v2.4.0) :
+      le conteneur flex étirait les deux lignes de texte à la même
+      largeur (celle du bloc parent), ce qui faussait la mesure
+      JavaScript et donnait un espacement quasi nul. Ajout de
+      align-items: flex-start pour que chaque ligne ne prenne que la
+      largeur de son propre texte, rendant la mesure — et donc
+      l'espacement calculé — correcte.
     v2.4.1 (2026-08-28) - [Code.gs] Aucun changement.
       Nouvelle image de bandeau (1585x672 px). Chargée via le service de
       vignettes Google Drive (sz=w900) pour limiter le poids ; aucun
@@ -283,7 +291,7 @@
         .footer-brand { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 0 4px 0; }
         .icon-avatar-small { width: 32px; height: 32px; background: #ffffff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center; border: 2px solid #ffffff; overflow: hidden; flex-shrink: 0; }
         .icon-avatar-small img { width: 100%; height: 100%; object-fit: cover; }
-        .footer-brand-text { display: flex; flex-direction: column; justify-content: center; }
+        .footer-brand-text { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
         .footer-brand-name { font-size: 0.62rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.3px; line-height: 1.15; }
         .footer-brand-subtitle { font-size: 0.42rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.2px; line-height: 1.15; }
         .form-content { padding: 24px 24px 36px 24px; }
@@ -1010,7 +1018,7 @@
             <div class="footer-brand-subtitle">Conseil de Copropriété</div>
         </div>
     </div>
-    <div style="text-align:center; padding: 2px 10px 10px 10px; font-size: 0.7rem; color: #94a3b8;">v2.4.1</div>
+    <div style="text-align:center; padding: 2px 10px 10px 10px; font-size: 0.7rem; color: #94a3b8;">v2.4.2</div>
 </div>
 
 <script>
