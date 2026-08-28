@@ -4,9 +4,18 @@
     Ce fichier fait partie du même système que Code.gs (numéro de
     version synchronisé entre les deux fichiers).
 
-    VERSION SYSTÈME : 2.5.0
+    VERSION SYSTÈME : 2.6.0
 
     CHANGELOG (système complet, HTML + Apps Script) :
+    v2.6.0 (2026-08-28)
+      - [index.html] Validation du téléphone (principal + contact de
+        confiance) durcie : nombre exact de 11 chiffres requis (préfixe
+        international compris, ex: +32 4XX XX XX XX).
+      - [Code.gs] Même durcissement côté serveur, avec ajout de la
+        validation du téléphone du contact de confiance (absente côté
+        serveur jusqu'ici).
+      - [Code.gs] Correction de la constante SYSTEM_VERSION, restée
+        désynchronisée d'une version.
     v2.5.0 (2026-08-28) - [index.html] Aucun changement.
       Ajout côté Code.gs uniquement : pied de page dans le PDF
       récapitulatif (logo + numéro de version). Numéro synchronisé
@@ -1022,7 +1031,7 @@
             <div class="footer-brand-subtitle">Conseil de Copropriété</div>
         </div>
     </div>
-    <div style="text-align:center; padding: 2px 10px 10px 10px; font-size: 0.7rem; color: #94a3b8;">v2.5.0</div>
+    <div style="text-align:center; padding: 2px 10px 10px 10px; font-size: 0.7rem; color: #94a3b8;">v2.6.0</div>
 </div>
 
 <script>
@@ -1198,17 +1207,24 @@
 
     // Libellés des champs manquants et préfixe du message d'erreur, par langue
     const FIELD_LABELS = {
-        fr: { code: "code d'accès", appartement: 'appartement', statut: 'statut', nom: 'nom', prenom: 'prénom', telephone: 'téléphone', email: 'email', option: "option d'accès", consent: 'consentement', contact_nom: 'nom du contact', contact_tel: 'téléphone du contact', contact_adresse: 'adresse du contact', contact_voisin: 'voisin (oui/non)', email_invalide: "email invalide (ex: nom@exemple.be)", telephone_invalide: 'téléphone invalide (ex: +32 4XX XX XX XX)', contact_tel_invalide: 'téléphone du contact invalide' },
-        nl: { code: 'toegangscode', appartement: 'appartement', statut: 'status', nom: 'naam', prenom: 'voornaam', telephone: 'telefoon', email: 'email', option: 'toegangsoptie', consent: 'toestemming', contact_nom: 'naam van het contact', contact_tel: 'telefoon van het contact', contact_adresse: 'adres van het contact', contact_voisin: 'buur (ja/nee)', email_invalide: 'ongeldige email (bv: naam@voorbeeld.be)', telephone_invalide: 'ongeldige telefoon (bv: +32 4XX XX XX XX)', contact_tel_invalide: 'ongeldige telefoon van het contact' },
-        en: { code: 'access code', appartement: 'apartment', statut: 'status', nom: 'last name', prenom: 'first name', telephone: 'phone', email: 'email', option: 'access option', consent: 'consent', contact_nom: 'contact name', contact_tel: 'contact phone', contact_adresse: 'contact address', contact_voisin: 'neighbor (yes/no)', email_invalide: 'invalid email (e.g. name@example.com)', telephone_invalide: 'invalid phone (e.g. +32 4XX XX XX XX)', contact_tel_invalide: 'invalid contact phone' }
+        fr: { code: "code d'accès", appartement: 'appartement', statut: 'statut', nom: 'nom', prenom: 'prénom', telephone: 'téléphone', email: 'email', option: "option d'accès", consent: 'consentement', contact_nom: 'nom du contact', contact_tel: 'téléphone du contact', contact_adresse: 'adresse du contact', contact_voisin: 'voisin (oui/non)', email_invalide: "email invalide (ex: nom@exemple.be)", telephone_invalide: 'téléphone invalide (11 chiffres attendus, ex: +32 4XX XX XX XX)', contact_tel_invalide: 'téléphone du contact invalide (11 chiffres attendus)' },
+        nl: { code: 'toegangscode', appartement: 'appartement', statut: 'status', nom: 'naam', prenom: 'voornaam', telephone: 'telefoon', email: 'email', option: 'toegangsoptie', consent: 'toestemming', contact_nom: 'naam van het contact', contact_tel: 'telefoon van het contact', contact_adresse: 'adres van het contact', contact_voisin: 'buur (ja/nee)', email_invalide: 'ongeldige email (bv: naam@voorbeeld.be)', telephone_invalide: 'ongeldige telefoon (11 cijfers verwacht, bv: +32 4XX XX XX XX)', contact_tel_invalide: 'ongeldige telefoon van het contact (11 cijfers verwacht)' },
+        en: { code: 'access code', appartement: 'apartment', statut: 'status', nom: 'last name', prenom: 'first name', telephone: 'phone', email: 'email', option: 'access option', consent: 'consent', contact_nom: 'contact name', contact_tel: 'contact phone', contact_adresse: 'contact address', contact_voisin: 'neighbor (yes/no)', email_invalide: 'invalid email (e.g. name@example.com)', telephone_invalide: 'invalid phone (11 digits expected, e.g. +32 4XX XX XX XX)', contact_tel_invalide: 'invalid contact phone (11 digits expected)' }
     };
     const ERROR_PREFIX = { fr: 'Veuillez compléter : ', nl: 'Vul aub in: ', en: 'Please complete: ' };
 
-    // Formats acceptés : email standard, téléphone avec au moins 8 chiffres
-    // (accepte +, espaces, points, tirets — reste permissif pour ne pas
-    // bloquer des formats internationaux légitimes).
+    // Formats acceptés : email standard, téléphone avec exactement 11
+    // chiffres (préfixe international compris, ex: +32 4XX XX XX XX =
+    // 32 + 9 chiffres = 11 au total). Le format des caractères reste
+    // permissif (+, espaces, points, tirets), mais le nombre de chiffres
+    // est désormais strictement vérifié.
     const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     const PHONE_REGEX = /^\+?[0-9][0-9\s\-.]{6,17}$/;
+    const PHONE_DIGIT_COUNT = 11;
+    function isPhoneValid(raw) {
+        if (!PHONE_REGEX.test(raw)) return false;
+        return raw.replace(/\D/g, '').length === PHONE_DIGIT_COUNT;
+    }
 
     function showError(lang, step, missingKeys) {
         const errorBox = document.getElementById(`error-${lang}-${step}`);
@@ -1234,7 +1250,7 @@
 
         const tel = getVal(`${lang}-tel`);
         if (!tel) missing.push('telephone');
-        else if (!PHONE_REGEX.test(tel)) missing.push('telephone_invalide');
+        else if (!isPhoneValid(tel)) missing.push('telephone_invalide');
 
         const email = getVal(`${lang}-email`);
         if (!email) missing.push('email');
@@ -1256,7 +1272,7 @@
 
             const contactTel = getVal(`${lang}-contact-tel`);
             if (!contactTel) missing.push('contact_tel');
-            else if (!PHONE_REGEX.test(contactTel)) missing.push('contact_tel_invalide');
+            else if (!isPhoneValid(contactTel)) missing.push('contact_tel_invalide');
 
             if (!getVal(`${lang}-contact-adresse`)) missing.push('contact_adresse');
             if (!getChecked(`${lang}_voisin`)) missing.push('contact_voisin');
